@@ -80,7 +80,10 @@ public class RectangleController : ControllerBase
     [HttpPost]
     public IActionResult Create(Rectangle rectangle)
     {
+        rectangle.CalculateArea();
+
         RectangleService.Add(rectangle);
+
         return CreatedAtAction(nameof(Create), new { id = rectangle.Id }, rectangle);
     }
 
