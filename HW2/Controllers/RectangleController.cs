@@ -1,5 +1,4 @@
 ﻿using HW2.Models;
-using HW2.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HW2.Controllers;

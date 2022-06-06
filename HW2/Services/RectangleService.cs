@@ -1,7 +1,4 @@
 ﻿using HW2.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace HW2.Services;
 
 public static class RectangleService
 {

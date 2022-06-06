@@ -1,6 +1,4 @@
-﻿using HW2.Services;
-using HW2.Controllers;
-
+﻿
 namespace HW2.Models
 {
     public class Rectangle
