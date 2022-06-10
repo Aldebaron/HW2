@@ -23,11 +23,18 @@ namespace HW2.Controllers
         /// Default, just to ensure all is working.
         /// </summary>
         /// <returns>Basic Message</returns>
+        /// 
+        //[HttpGet]
+        //public ActionResult<string> Index()
+        //{
+        //    return "Messaging";
+        //}
+
+        //Changed to GetAll for testing ~A
         [HttpGet]
-        public ActionResult<string> Index()
-        {
-            return "Messaging";
-        }
+        public ActionResult<List<Message>> GetAll() =>
+            _msgService.GetAll();
+
 
         /// <summary>
         /// How to 'add' a message.
@@ -37,10 +44,11 @@ namespace HW2.Controllers
         /// <param name="from">User ID who sent the message</param>
         /// <param name="message">Body of the message. Note: To keep it simple, we will not use subject.</param>
         /// <returns>boolean</returns>
-        [HttpPost("Send/{to}/{from}/{message}")]
-        public ActionResult<bool> SendMessage(string to, string from, string message)
+        [HttpPost("Send/{to}/{from}/{body}")]
+        public ActionResult<string> SendMessage(string to, string from, string body)
         {
-            return false;
+            _msgService.Add(to, from, body);
+            return "Sent";
         }
 
         /// <summary>
@@ -51,10 +59,11 @@ namespace HW2.Controllers
         /// Decide the input parameters here.
         /// </todo>
         /// <returns>List of Messages ordered descending</returns>
-        [HttpGet("Read/{from}")]
-        public ActionResult<List<Message>> ReadMessage(string from)
+        [HttpGet("Read/{user}/{other}")]
+        public ActionResult<List<Message>> ReadMessage(string user, string other)
         {
             var messages = new List<Message>();
+            messages = _msgService.ReadMessage(user, other);
             return messages;
         }
 
@@ -62,10 +71,11 @@ namespace HW2.Controllers
         /// Inbox view, display a list of users who you are conversing with. 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("List/{from}")]
-        public ActionResult<List<Message>> ListMessages()
+        [HttpGet("List/{user}")]
+        public ActionResult<List<Message>> ListMessages(string user)
         {
             var list = new List<Message>();
+            list = _msgService.Inbox(user);
             return list;
         }
 
