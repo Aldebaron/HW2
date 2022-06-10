@@ -26,7 +26,7 @@ namespace HW2.Controllers
         [HttpGet]
         public ActionResult<string> Index()
         {
-            return "Messaging System Online.";
+            return "Messaging";
         }
 
         /// <summary>
