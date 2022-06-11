@@ -63,6 +63,7 @@ namespace HW2.Controllers
         [HttpGet("Read/{user}/{other}")]
         public ActionResult<List<Message>> ReadMessage(string user, string other)
         {
+            if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
             messages = _msgService.ReadMessage(user, other);
             return messages;
@@ -75,6 +76,7 @@ namespace HW2.Controllers
         [HttpGet("List/{user}")]
         public ActionResult<List<Message>> ListMessages(string user)
         {
+            if (Authenticate(user) == false) { return NoContent(); }
             var list = new List<Message>();
             list = _msgService.Inbox(user);
             return list;
