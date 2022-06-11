@@ -47,6 +47,7 @@ namespace HW2.Controllers
         [HttpPost("Send/{to}/{from}/{body}")]
         public ActionResult<string> SendMessage(string to, string from, string body)
         {
+            if (Authenticate(from) == false) { return NoContent(); }
             _msgService.Add(to, from, body);
             return "Sent";
         }
