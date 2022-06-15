@@ -43,12 +43,11 @@ namespace HW2.Controllers
         /// <param name="to">User ID the message will be send to.</param>
         /// <param name="from">User ID who sent the message</param>
         /// <param name="message">Body of the message. Note: To keep it simple, we will not use subject.</param>
-        /// <returns>boolean</returns>
-        [HttpPost("Send/{to}/{from}/{body}")]
-        public ActionResult<string> SendMessage(string to, string from, string body)
+        [HttpPost("Send")]
+        public Message SendMessage(Message msg)
         {
-            _msgService.Add(to, from, body);
-            return "Sent";
+            return = _msgService.Add(msg.To, msg.From, msg.Body);
+            //return "Sent";
         }
 
         /// <summary>

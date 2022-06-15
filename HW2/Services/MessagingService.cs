@@ -5,8 +5,8 @@ namespace HW2.Services
 
     public class MessagingService
     {
-        public int NextId = 100;
-        public List<Message> Messages;
+        public static int NextId = 100;
+        public List<Message> Messages; // Database of all messages
         public List<Message> inbox;
         public List<Message> ConvoThread;
         public List<string> Corresponders;
@@ -31,6 +31,7 @@ namespace HW2.Services
             g.Id = NextId++;
             var h = new Message("Steve", "Al", "See ya");
             h.Id = NextId++;
+            var j = Add("Joe", "Al", "constructor");
 
             //Should I have used the "test" window for these test messages instead of putting
             //them in directly through the service? ~A
@@ -42,12 +43,13 @@ namespace HW2.Services
         public List<Message> GetAll() => Messages;
 
 
-        public void Add(string to, string from, string body)
+        public Message Add(string to, string from, string body)
         {
             var message = new Message(to, from, body);
             message.Id = NextId++;
 
             Messages.Add(message);
+            return message;
         }
 
 
