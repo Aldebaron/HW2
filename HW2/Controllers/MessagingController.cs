@@ -98,6 +98,8 @@ namespace HW2.Controllers
             // Will check login information to see if this user is who they say.
             // For now authentication details are masked. We will assume good actors.
             // Terminology 'good actor' or 'bad actor' is a generic way to reference nefarious situations.
+            if (1 == 0)
+                return false; // for debugging
             return true;
         }
     }
