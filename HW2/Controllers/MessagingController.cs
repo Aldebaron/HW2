@@ -44,10 +44,11 @@ namespace HW2.Controllers
         /// <param name="from">User ID who sent the message</param>
         /// <param name="message">Body of the message. Note: To keep it simple, we will not use subject.</param>
         [HttpPost("Send")]
-        public Message SendMessage(Message msg)
+        public ActionResult SendMessage(Message msg)
         {
-            return = _msgService.Add(msg.To, msg.From, msg.Body);
-            //return "Sent";
+            if (Authenticate(msg.From) == false) { return NoContent(); }
+            _msgService.Add(msg.To, msg.From, msg.Body, msg.CreatedAt);
+            return Accepted();
         }
 
         /// <summary>
@@ -61,6 +62,7 @@ namespace HW2.Controllers
         [HttpGet("Read/{user}/{other}")]
         public ActionResult<List<Message>> ReadMessage(string user, string other)
         {
+            if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
             messages = _msgService.ReadMessage(user, other);
             return messages;
@@ -73,6 +75,7 @@ namespace HW2.Controllers
         [HttpGet("List/{user}")]
         public ActionResult<List<Message>> ListMessages(string user)
         {
+            if (Authenticate(user) == false) { return NoContent(); }
             var list = new List<Message>();
             list = _msgService.Inbox(user);
             return list;

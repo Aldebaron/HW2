@@ -6,7 +6,8 @@ namespace HW2.Services
     public class MessagingService
     {
         public static int NextId = 100;
-        public List<Message> Messages; // Database of all messages
+        public static List<Message> Messages = new List<Message>(); // Database of all messages
+        // These 3 are not need. Declare them at the function level.
         public List<Message> inbox;
         public List<Message> ConvoThread;
         public List<string> Corresponders;
@@ -15,37 +16,45 @@ namespace HW2.Services
         {
             //The manual creation using the curly braces was giving me some problem so I
             //did it this way and it didn't seem to impair functionality ~A
-            var a = new Message("Jim", "Al", "Message 1");
+            var a = new Message("Jim", "Al", "Message 1", DateTime.Parse("2022-06-01 11:00:00"));
             a.Id = NextId++;
-            var b = new Message("John", "Joe", "Test 2");
+            var b = new Message("John", "Joe", "Test 2", DateTime.Parse("2022-02-01 11:00:00"));
             b.Id = NextId++;
-            var c = new Message("Steve", "Al", "Hi");
+            var c = new Message("Steve", "Al", "Hi", DateTime.Parse("2022-03-01 11:00:00"));
             c.Id = NextId++;
-            var d = new Message("Al", "Steve", "Hello");
+            var d = new Message("Al", "Steve", "Hello", DateTime.Parse("2022-04-01 11:00:00"));
             d.Id = NextId++;
-            var e = new Message("EJ", "Al", "Hi!");
+            var e = new Message("Jim", "Al", "Hi!", DateTime.Parse("2022-01-01 11:00:00"));
             e.Id = NextId++;
-            var f = new Message("Al", "Joe", "Goodbye");
+            var f = new Message("Al", "Joe", "Goodbye", DateTime.Parse("2022-02-01 11:00:00"));
             f.Id = NextId++;
-            var g = new Message("EJ", "Al", "Goodbye!");
+            var g = new Message("Joe", "Al", "Goodbye!", DateTime.Parse("2022-01-01 11:00:00"));
             g.Id = NextId++;
-            var h = new Message("Steve", "Al", "See ya");
+            var h = new Message("Steve", "Al", "See ya", DateTime.Parse("2022-01-01 11:00:00"));
             h.Id = NextId++;
-            var j = Add("Joe", "Al", "constructor");
 
             //Should I have used the "test" window for these test messages instead of putting
             //them in directly through the service? ~A
+            //Test Explorer is a good way to test this section w/o having to run the application. We'll look at that later. (JVP-June-2022)
 
             Messages = new List<Message>
             {a, b, c,d,e,f,g,h};
+
+            // TODO: Research the keyword "static"
+            // TODO: Make the above 'manual creation' like the following line.
+            // Utilizing the class's Add function, if you change your mind about what ADD means, you can implement the changes within Add().
+            // Example requirement: NextId should be an even number.
+            // TODO: implement NextId only being an even number starting at 1000.
+            Add("Joe", "Al", "Latest Test", DateTime.UtcNow);
         }
 
         public List<Message> GetAll() => Messages;
 
 
-        public Message Add(string to, string from, string body)
+        public Message Add(string to, string from, string body, DateTime dt)
         {
-            var message = new Message(to, from, body);
+            if (dt == new DateTime()) dt = DateTime.UtcNow;
+            var message = new Message(to, from, body, dt);
             message.Id = NextId++;
 
             Messages.Add(message);
@@ -64,13 +73,12 @@ namespace HW2.Services
                         (Messages[n].To == other || Messages[n].From == other))
                 { ConvoThread.Add(Messages[n]); }
                 n--;
-
             }
-           //newest first ~A
+            //newest first ~A
+            // There is a bug here (JVP-June-2022)
+
             return ConvoThread;
         }
-
-
 
 
         public List<Message> Inbox(string user) {
