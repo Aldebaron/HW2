@@ -5,47 +5,37 @@ namespace HW2.Services
 
     public class MessagingService
     {
-        public static int NextId = 100;
+        public static int NextId = 998;
         public static List<Message> Messages = new List<Message>(); // Database of all messages
-        // These 3 are not need. Declare them at the function level.
-        public List<Message> inbox;
-        public List<Message> ConvoThread;
-        public List<string> Corresponders;
         
         public MessagingService()
         {
-            //The manual creation using the curly braces was giving me some problem so I
-            //did it this way and it didn't seem to impair functionality ~A
-            var a = new Message("Jim", "Al", "Message 1", DateTime.Parse("2022-06-01 11:00:00"));
-            a.Id = NextId++;
-            var b = new Message("John", "Joe", "Test 2", DateTime.Parse("2022-02-01 11:00:00"));
-            b.Id = NextId++;
-            var c = new Message("Steve", "Al", "Hi", DateTime.Parse("2022-03-01 11:00:00"));
-            c.Id = NextId++;
-            var d = new Message("Al", "Steve", "Hello", DateTime.Parse("2022-04-01 11:00:00"));
-            d.Id = NextId++;
-            var e = new Message("Jim", "Al", "Hi!", DateTime.Parse("2022-01-01 11:00:00"));
-            e.Id = NextId++;
-            var f = new Message("Al", "Joe", "Goodbye", DateTime.Parse("2022-02-01 11:00:00"));
-            f.Id = NextId++;
-            var g = new Message("Joe", "Al", "Goodbye!", DateTime.Parse("2022-01-01 11:00:00"));
-            g.Id = NextId++;
-            var h = new Message("Steve", "Al", "See ya", DateTime.Parse("2022-01-01 11:00:00"));
-            h.Id = NextId++;
+
 
             //Should I have used the "test" window for these test messages instead of putting
             //them in directly through the service? ~A
             //Test Explorer is a good way to test this section w/o having to run the application. We'll look at that later. (JVP-June-2022)
 
-            Messages = new List<Message>
-            {a, b, c,d,e,f,g,h};
+            Messages = new List<Message> { };
 
-            // TODO: Research the keyword "static"
-            // TODO: Make the above 'manual creation' like the following line.
-            // Utilizing the class's Add function, if you change your mind about what ADD means, you can implement the changes within Add().
-            // Example requirement: NextId should be an even number.
-            // TODO: implement NextId only being an even number starting at 1000.
+            //How do things like base classes and subclasses work?
+            //I think I understand static when it comes to classes like models, but I don't fully understand the use
+            //of it here. NextId kinda makes sense, but Messages being declared staic up there doesn't make as much sense
+            //in the C# definition of static. And I also looked into the C version of static, which is a lot more straightforward,
+            //but is there a connection to how it works in C#? Also, is it okay that I deleted the TODO items? I was trying to limit
+            //clutter but maybe you wanted them as a sort of log? ~A
+
+            
+            Add("Jim", "Al", "Message 1", DateTime.UtcNow);
+            Add("John", "Joe", "Test 2", DateTime.UtcNow);
+            Add("Steve", "Al", "Hi", DateTime.UtcNow);
+            Add("Al", "Steve", "Hello", DateTime.UtcNow);
+            Add("Jim", "Al", "Hi!", DateTime.UtcNow);
+            Add("Al", "Joe", "Goodbye", DateTime.UtcNow);
+            Add("Joe", "Al", "Goodbye!", DateTime.UtcNow);
+            Add("Steve", "Al", "See ya", DateTime.UtcNow);
             Add("Joe", "Al", "Latest Test", DateTime.UtcNow);
+            
         }
 
         public List<Message> GetAll() => Messages;
@@ -54,28 +44,37 @@ namespace HW2.Services
         public Message Add(string to, string from, string body, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
+            //How does a "new" statement work with an equality operator? ~A
             var message = new Message(to, from, body, dt);
-            message.Id = NextId++;
+            NextId += 2;
+            message.Id = NextId;
+
 
             Messages.Add(message);
             return message;
+            //Why does this return the message? ~A
         }
 
 
         public List<Message> ReadMessage(string user, string other) {
 
+            List<Message> ConvoThread;
             ConvoThread = new List<Message> { };
             int n = Messages.Count-1;
 
             while (n >= 0)
             {
                 if ((Messages[n].To == user || Messages[n].From == user) &&
-                        (Messages[n].To == other || Messages[n].From == other))
+                        (Messages[n].To == other || Messages[n].From == other)
+                        && (user != other))
                 { ConvoThread.Add(Messages[n]); }
                 n--;
             }
             //newest first ~A
             // There is a bug here (JVP-June-2022)
+            //Do you mean that if user==other you see all messages sent/received by that person?
+            //I fixed that, but if there's something else I don't see it.
+            //Also, should we limit SendMessage so that you can't send a message to yourself? ~A
 
             return ConvoThread;
         }
@@ -83,6 +82,9 @@ namespace HW2.Services
 
         public List<Message> Inbox(string user) {
 
+            List<Message> inbox;
+            List<Message> ConvoThread;
+            List<string> Corresponders;
             inbox = new List<Message> { };
             ConvoThread = new List<Message> { };
             Corresponders = new List<string> { };
