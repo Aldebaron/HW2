@@ -24,6 +24,10 @@ namespace HW2.Services
             //in the C# definition of static. And I also looked into the C version of static, which is a lot more straightforward,
             //but is there a connection to how it works in C#? Also, is it okay that I deleted the TODO items? I was trying to limit
             //clutter but maybe you wanted them as a sort of log? ~A
+            // Yep.
+            // Static will ensure there is only one version of the variable if you create this object again and again.
+            // Lucky for us, this won't happen because the way the Messaging Service is created, however if something does get messed up 
+            // and there are two instances of this class, we won't have ID collisions. One object will not have message id 100, and the second object have message id 100 too!
 
             
             Add("Jim", "Al", "Message 1", DateTime.UtcNow);
@@ -45,6 +49,10 @@ namespace HW2.Services
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
             //How does a "new" statement work with an equality operator? ~A
+            var test = new DateTime(); // See what the value is. 
+			// Null is not an option with this type.
+			// We are checking to ensure Date set to something. If we get "new" then we want to set to current d/t.
+
             var message = new Message(to, from, body, dt);
             NextId += 2;
             message.Id = NextId;
@@ -53,6 +61,8 @@ namespace HW2.Services
             Messages.Add(message);
             return message;
             //Why does this return the message? ~A
+            // Obviously they know the to/from/message already.
+            // but we add the ID of the message and createDate.
         }
 
 
@@ -65,8 +75,8 @@ namespace HW2.Services
             while (n >= 0)
             {
                 if ((Messages[n].To == user || Messages[n].From == user) &&
-                        (Messages[n].To == other || Messages[n].From == other)
-                        && (user != other))
+                    (Messages[n].To == other || Messages[n].From == other) &&
+                    (user != other))
                 { ConvoThread.Add(Messages[n]); }
                 n--;
             }
@@ -74,7 +84,9 @@ namespace HW2.Services
             // There is a bug here (JVP-June-2022)
             //Do you mean that if user==other you see all messages sent/received by that person?
             //I fixed that, but if there's something else I don't see it.
-            //Also, should we limit SendMessage so that you can't send a message to yourself? ~A
+            // The bug is in the sorting mechanism. If you change your Add's at the top with dates in different order, then they will also be out of sequence later.
+            // We can never assume that messages get stored in order by ID, we must sort on date. (JVP-Jun-2022)
+            //Also, should we limit SendMessage so that you can't send a message to yourself? ~A -- No (JVP-Jun-2022)
 
             return ConvoThread;
         }

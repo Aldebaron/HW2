@@ -17,6 +17,7 @@
 
         public Message() { }
         //Why do we want to allow null messages to exist? ~A
+        //It is necessary to have  default consturctor when defining alternate constructors as below. (JVP-Jun-2022)
         public Message(string to, string from, string body, DateTime dt)
         {
             this.From = from;
@@ -24,7 +25,7 @@
             this.Body = body;
             // Allow this to be set for now. Final implementation may not allow time to be set by the caller.
             //If it wasn't set by the caller, would this just be this.CreatedAt = DateTime.UtcNow?
-            //And why would we allow it to be set? ~A
+            //And why would we allow it to be set? ~A -- to find a bug!
             this.CreatedAt = dt;
         }
     }
