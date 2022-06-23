@@ -20,7 +20,7 @@ namespace HW2.Services
 
             //How do things like base classes and subclasses work?
             //I think I understand static when it comes to classes like models, but I don't fully understand the use
-            //of it here. NextId kinda makes sense, but Messages being declared staic up there doesn't make as much sense
+            //of it here. NextId kinda makes sense, but Messages being declared static up there doesn't make as much sense
             //in the C# definition of static. And I also looked into the C version of static, which is a lot more straightforward,
             //but is there a connection to how it works in C#? Also, is it okay that I deleted the TODO items? I was trying to limit
             //clutter but maybe you wanted them as a sort of log? ~A
@@ -28,8 +28,10 @@ namespace HW2.Services
             // Static will ensure there is only one version of the variable if you create this object again and again.
             // Lucky for us, this won't happen because the way the Messaging Service is created, however if something does get messed up 
             // and there are two instances of this class, we won't have ID collisions. One object will not have message id 100, and the second object have message id 100 too!
-
-            
+            var date1 = new DateTime(2023, 5, 1, 8, 30, 52);
+            var date2 = new DateTime(2020, 5, 1, 8, 30, 52);
+            Add("EJ", "Al", "New", date1);
+            Add("EJ", "Al", "Old", date2);
             Add("Jim", "Al", "Message 1", DateTime.UtcNow);
             Add("John", "Joe", "Test 2", DateTime.UtcNow);
             Add("Steve", "Al", "Hi", DateTime.UtcNow);
@@ -70,7 +72,7 @@ namespace HW2.Services
 
             List<Message> ConvoThread;
             ConvoThread = new List<Message> { };
-            int n = Messages.Count-1;
+            int n = Messages.Count - 1;
 
             while (n >= 0)
             {
@@ -79,6 +81,21 @@ namespace HW2.Services
                     (user != other))
                 { ConvoThread.Add(Messages[n]); }
                 n--;
+            }
+
+            n = Messages.Count - 1;
+
+            if (user == other) {
+
+                while (n >= 0)
+                {
+                    if (Messages[n].To == user && Messages[n].From == user) {
+                        ConvoThread.Add(Messages[n]);
+                    }
+                    n--;
+
+                }
+
             }
 
             n = ConvoThread.Count-1;
@@ -112,6 +129,7 @@ namespace HW2.Services
             // The bug is in the sorting mechanism. If you change your Add's at the top with dates in different order, then they will also be out of sequence later.
             // We can never assume that messages get stored in order by ID, we must sort on date. (JVP-Jun-2022)
             //Also, should we limit SendMessage so that you can't send a message to yourself? ~A -- No (JVP-Jun-2022)
+            //Fixed. (Right?) ~A
 
             return ConvoThread;
         }
@@ -147,7 +165,8 @@ namespace HW2.Services
                 else if (Messages[tc].CreatedAt.Ticks == Messages[tc + 1].CreatedAt.Ticks) { tc++; }
 
             }
-
+            // Now for this function, Messages is definitely ordered by date. Would it be worth it
+            //to put this somewhere else so that Messages is always ordered by date? ~A
 
             while (n >= 0) {
 
