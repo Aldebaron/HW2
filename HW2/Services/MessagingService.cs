@@ -80,6 +80,31 @@ namespace HW2.Services
                 { ConvoThread.Add(Messages[n]); }
                 n--;
             }
+
+            n = ConvoThread.Count-1;
+            int c = 0;
+            Message t1 = new Message();
+            Message t2 = new Message();
+
+            while (c < n) {
+                if (ConvoThread[c].CreatedAt.Ticks > ConvoThread[c + 1].CreatedAt.Ticks) { c++; }
+                else if (ConvoThread[c].CreatedAt.Ticks < ConvoThread[c + 1].CreatedAt.Ticks)
+                {
+                    t1 = ConvoThread[c];
+                    t2 = ConvoThread[c + 1];
+                    ConvoThread[c] = t2;
+                    ConvoThread[c + 1] = t1;
+                    if (c > 0) { c = c + 1; };
+                }
+
+                else if (ConvoThread[c].CreatedAt.Ticks == ConvoThread[c + 1].CreatedAt.Ticks) { c++; }
+
+                }
+
+
+
+
+
             //newest first ~A
             // There is a bug here (JVP-June-2022)
             //Do you mean that if user==other you see all messages sent/received by that person?
@@ -101,6 +126,28 @@ namespace HW2.Services
             ConvoThread = new List<Message> { };
             Corresponders = new List<string> { };
             int n = Messages.Count-1;
+
+            
+            int tc = 0;
+            Message t1 = new Message();
+            Message t2 = new Message();
+
+            while (tc < n)
+            {
+                if (Messages[tc].CreatedAt.Ticks < Messages[tc + 1].CreatedAt.Ticks) { tc++; }
+                else if (Messages[tc].CreatedAt.Ticks > Messages[tc + 1].CreatedAt.Ticks)
+                {
+                    t1 = Messages[tc];
+                    t2 = Messages[tc + 1];
+                    Messages[tc] = t2;
+                    Messages[tc + 1] = t1;
+                    if (tc > 0) { tc = tc + 1; };
+                }
+
+                else if (Messages[tc].CreatedAt.Ticks == Messages[tc + 1].CreatedAt.Ticks) { tc++; }
+
+            }
+
 
             while (n >= 0) {
 
