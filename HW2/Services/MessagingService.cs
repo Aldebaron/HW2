@@ -30,8 +30,12 @@ namespace HW2.Services
             // and there are two instances of this class, we won't have ID collisions. One object will not have message id 100, and the second object have message id 100 too!
             var date1 = new DateTime(2023, 5, 1, 8, 30, 52);
             var date2 = new DateTime(2020, 5, 1, 8, 30, 52);
+            var date3 = new DateTime(2019, 5, 1, 8, 30, 52);
             Add("EJ", "Al", "New", date1);
             Add("EJ", "Al", "Old", date2);
+            //Test ReadMessage w 2 EJ messages
+            Add("Cat", "Al", "Old", date3);
+            //Test Inbox w first EJ message and Cat Message
             Add("Jim", "Al", "Message 1", DateTime.UtcNow);
             Add("John", "Joe", "Test 2", DateTime.UtcNow);
             Add("Steve", "Al", "Hi", DateTime.UtcNow);
