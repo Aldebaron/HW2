@@ -28,23 +28,21 @@ namespace HW2.Services
             // Static will ensure there is only one version of the variable if you create this object again and again.
             // Lucky for us, this won't happen because the way the Messaging Service is created, however if something does get messed up 
             // and there are two instances of this class, we won't have ID collisions. One object will not have message id 100, and the second object have message id 100 too!
-            var date1 = new DateTime(2023, 5, 1, 8, 30, 52);
-            var date2 = new DateTime(2020, 5, 1, 8, 30, 52);
-            var date3 = new DateTime(2019, 5, 1, 8, 30, 52);
-            Add("EJ", "Al", "New", date1);
-            Add("EJ", "Al", "Old", date2);
+           
+            Add("EJ", "Al", "New", new DateTime(2023, 5, 1, 8, 30, 52));
+            Add("EJ", "Al", "Old", new DateTime(2020, 5, 1, 8, 30, 52));
             //Test ReadMessage w 2 EJ messages
-            Add("Cat", "Al", "Old", date3);
+            Add("Cat", "Al", "Old", new DateTime(2019, 5, 1, 8, 30, 52));
             //Test Inbox w first EJ message and Cat Message
-            Add("Jim", "Al", "Message 1", DateTime.UtcNow);
-            Add("John", "Joe", "Test 2", DateTime.UtcNow);
-            Add("Steve", "Al", "Hi", DateTime.UtcNow);
-            Add("Al", "Steve", "Hello", DateTime.UtcNow);
-            Add("Jim", "Al", "Hi!", DateTime.UtcNow);
-            Add("Al", "Joe", "Goodbye", DateTime.UtcNow);
-            Add("Joe", "Al", "Goodbye!", DateTime.UtcNow);
-            Add("Steve", "Al", "See ya", DateTime.UtcNow);
-            Add("Joe", "Al", "Latest Test", DateTime.UtcNow);
+            Add("Jim", "Al", "Message 1", new DateTime(2022, 1, 1, 8, 30, 52));
+            Add("John", "Joe", "Test 2", new DateTime(2022, 2, 1, 8, 30, 52));
+            Add("Steve", "Al", "Hi", new DateTime(2022, 3, 1, 8, 30, 52));
+            Add("Al", "Steve", "Hello", new DateTime(2022, 4, 1, 8, 30, 52));
+            Add("Jim", "Al", "Hi!", new DateTime(2022, 5, 1, 9, 30, 52));
+            Add("Al", "Joe", "Goodbye", new DateTime(2022, 6, 1, 8, 30, 52));
+            Add("Joe", "Al", "Goodbye!", new DateTime(2022, 7, 1, 8, 30, 52));
+            Add("Steve", "Al", "See ya", new DateTime(2022, 8, 1, 8, 30, 52));
+            Add("Joe", "Al", "Latest Test", new DateTime(2022, 9, 1, 8, 30, 52));
             
         }
 
@@ -74,66 +72,56 @@ namespace HW2.Services
 
         public List<Message> ReadMessage(string user, string other) {
 
-            List<Message> ConvoThread;
-            ConvoThread = new List<Message> { };
-            int n = Messages.Count - 1;
+            var ConvoThread = new List<Message> { };
+            int i;
 
-            while (n >= 0)
+            if (user == other)
             {
-                if ((Messages[n].To == user || Messages[n].From == user) &&
-                    (Messages[n].To == other || Messages[n].From == other) &&
-                    (user != other))
-                { ConvoThread.Add(Messages[n]); }
-                n--;
-            }
 
-            n = Messages.Count - 1;
-
-            if (user == other) {
-
-                while (n >= 0)
+                for (i = Messages.Count - 1; i >= 0; i--)
                 {
-                    if (Messages[n].To == user && Messages[n].From == user) {
-                        ConvoThread.Add(Messages[n]);
+                    if (Messages[i].To == user && Messages[i].From == user)
+                    {
+                        ConvoThread.Add(Messages[i]);
                     }
-                    n--;
+                    i--;
 
                 }
 
             }
+            //Fail fast! Special case (messages sent to self) handled before usual situation
 
-            n = ConvoThread.Count-1;
-            int c = 0;
-            Message t1 = new Message();
-            Message t2 = new Message();
 
-            while (c < n) {
-                if (ConvoThread[c].CreatedAt.Ticks > ConvoThread[c + 1].CreatedAt.Ticks) { c++; }
-                else if (ConvoThread[c].CreatedAt.Ticks < ConvoThread[c + 1].CreatedAt.Ticks)
+            else
+            {
+                for (i = Messages.Count - 1; i >= 0; i--)
                 {
-                    t1 = ConvoThread[c];
-                    t2 = ConvoThread[c + 1];
-                    ConvoThread[c] = t2;
-                    ConvoThread[c + 1] = t1;
-                    if (c > 0) { c = c + 1; };
-                }
-
-                else if (ConvoThread[c].CreatedAt.Ticks == ConvoThread[c + 1].CreatedAt.Ticks) { c++; }
+                    if ((Messages[i].To == user || Messages[i].From == user) &&
+                        (Messages[i].To == other || Messages[i].From == other))
+                    { ConvoThread.Add(Messages[i]); }
 
                 }
+            }
+            //if a message in the database is sent/received by user/corresponder, add it to ConvoThread
 
 
+            var t = new Message();
+            //temporary message container for switching message order
+   
+            //organizes ConvoThread by newest to oldest
+            for (i=0; i < (ConvoThread.Count - 1); i++) {
 
 
+                if (ConvoThread[i].CreatedAt < ConvoThread[i + 1].CreatedAt)
+                {
+                    t = ConvoThread[i];
+                    ConvoThread[i] = ConvoThread[i + 1];
+                    ConvoThread[i + 1] = t;
+                    if (i > 0) { i-=2; };
+                }
 
-            //newest first ~A
-            // There is a bug here (JVP-June-2022)
-            //Do you mean that if user==other you see all messages sent/received by that person?
-            //I fixed that, but if there's something else I don't see it.
-            // The bug is in the sorting mechanism. If you change your Add's at the top with dates in different order, then they will also be out of sequence later.
-            // We can never assume that messages get stored in order by ID, we must sort on date. (JVP-Jun-2022)
-            //Also, should we limit SendMessage so that you can't send a message to yourself? ~A -- No (JVP-Jun-2022)
-            //Fixed. (Right?) ~A
+                }
+            
 
             return ConvoThread;
         }
@@ -141,81 +129,61 @@ namespace HW2.Services
 
         public List<Message> Inbox(string user) {
 
-            List<Message> inbox;
-            List<Message> ConvoThread;
-            List<string> Corresponders;
-            inbox = new List<Message> { };
-            ConvoThread = new List<Message> { };
-            Corresponders = new List<string> { };
-            int n = Messages.Count-1;
+            var inbox = new List<Message>();
+            var ConvoThread = new List<Message>();
+            var Corresponders = new List<string>();
+            int i;
+            int j;
+           
+            var t = new Message();
+            //temporary container to switch order of list around
 
-            
-            int tc = 0;
-            Message t1 = new Message();
-            Message t2 = new Message();
-
-            while (tc < n)
+            for (i=0;  i < (Messages.Count -1); i++)
             {
-                if (Messages[tc].CreatedAt.Ticks < Messages[tc + 1].CreatedAt.Ticks) { tc++; }
-                else if (Messages[tc].CreatedAt.Ticks > Messages[tc + 1].CreatedAt.Ticks)
+                
+                if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
                 {
-                    t1 = Messages[tc];
-                    t2 = Messages[tc + 1];
-                    Messages[tc] = t2;
-                    Messages[tc + 1] = t1;
-                    if (tc > 0) { tc = tc + 1; };
+                    t = Messages[i];
+                    Messages[i] = Messages[i + 1];
+                    Messages[i + 1] = t;
+                    if (i > 0) { i-=2;};
                 }
-
-                else if (Messages[tc].CreatedAt.Ticks == Messages[tc + 1].CreatedAt.Ticks) { tc++; }
 
             }
-            // Now for this function, Messages is definitely ordered by date. Would it be worth it
-            //to put this somewhere else so that Messages is always ordered by date? ~A
+            // orders Messages by date
+            // Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
 
-            while (n >= 0) {
+            for (i = Messages.Count - 1; i >= 0; i--) {
 
-                if (Messages[n].From == user && !Corresponders.Contains(Messages[n].To)) {
-                    Corresponders.Add(Messages[n].To);
+                if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To)) {
+                    Corresponders.Add(Messages[i].To);
                 }
-                if (Messages[n].To == user && !Corresponders.Contains(Messages[n].From))
+                if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
                 {
-                    Corresponders.Add(Messages[n].From);
+                    Corresponders.Add(Messages[i].From);
                 }
-                n--;
 
             }
+            //finds all messages sent or received by user, then collects name of corresponder
+           
 
-            int m = Corresponders.Count;
-            int c = 0;
-            int co = 0;
-            int x;
-            int t = Messages.Count;
-
-            while (c < m)
+            for (j=0; j < Corresponders.Count; j++)
             {
 
 
-                while (co < t)
+                for (i = 0; i < Messages.Count; i++)
                 {
-                    if ((Messages[co].To == user || Messages[co].From == user) &&
-                        (Messages[co].To == Corresponders[c] || Messages[co].From == Corresponders[c]))
-                            { ConvoThread.Add(Messages[co]); }
-                    co++;
-                    //Messages in ConvoThread are grouped by corresponder, and groups are organized
-                    //by the most recent message sent/received by that corresponder. Most
-                    //recent is listed first.
+                    if ((Messages[i].To == user || Messages[i].From == user) &&
+                        (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
+                            { ConvoThread.Add(Messages[i]); }
+                    
+                 //Collects all messages between a user and a corresponder   
 
                 }
-                co = 0;
-                x = ConvoThread.Count - 1;
-                inbox.Add(ConvoThread[x]);
-                c++;
-                //Most recent message added to the list first, so it's on top
-
-                //Only showing the most recent message from each person, bc it's an inbox.
-                //I'm assuming that to see all messages from a specific person, you'd
-                //just use ReadMessages, but ConvoThread does contain all of the user's messages,
-                //so we could easily just give that instead. ~A
+               
+                inbox.Add(ConvoThread[ConvoThread.Count - 1]);
+                //collects most recent message between user and corresponder then moves on to next corresponder
+               
             }
 
 
