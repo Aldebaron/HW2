@@ -75,7 +75,8 @@ namespace HW2.Services
 
 
         public List<Message> ReadMessage(string user, string other) {
-
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var ConvoThread = new List<Message> { };
 
             if (user == other)
@@ -124,15 +125,16 @@ namespace HW2.Services
                 }
 
                 }
-            
 
+            stopwatch.Stop();
+            var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine(stopwatchresult);
             return ConvoThread;
         }
 
 
         public List<Message> Inbox(string user) {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
             var Corresponders = new List<string>();
@@ -225,9 +227,7 @@ namespace HW2.Services
             //starting with most recent, collect message if a message involving that corresponder hasn't already been
             //added to the list
 
-            stopwatch.Stop();
-                var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
-                Console.WriteLine(stopwatchresult);
+            
                 return inbox;
 
 
