@@ -52,7 +52,7 @@ namespace HW2.Controllers
             //This returns the message info, but it's buggy.
             //It allows you to set an id, which is a problem, though it does overwrite it when it adds to Messages,
             //which you can see in GetAll, but the Accepted message shows the overwritten wrong id.
-            //If you change the paramaters from "Message" msg to "string to, string from, string body, DateTime dt"
+            //If you change the paramaters from "Message msg" to "string to, string from, string body, DateTime dt"
             //and use that instead of msg, it solves both problems, but I imagine you changed it from that for a reason. ~A
         }
 
