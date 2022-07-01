@@ -1,4 +1,5 @@
 ﻿using HW2.Models;
+using System.Diagnostics;
 
 namespace HW2.Services
 {
@@ -7,7 +8,7 @@ namespace HW2.Services
     {
         public static int NextId = 998;
         public static List<Message> Messages = new List<Message>(); // Database of all messages
-        
+
         public MessagingService()
         {
 
@@ -28,24 +29,27 @@ namespace HW2.Services
             // Static will ensure there is only one version of the variable if you create this object again and again.
             // Lucky for us, this won't happen because the way the Messaging Service is created, however if something does get messed up 
             // and there are two instances of this class, we won't have ID collisions. One object will not have message id 100, and the second object have message id 100 too!
-           
-            Add("EJ", "Al", "New", new DateTime(2023, 5, 1, 8, 30, 52));
-            Add("EJ", "Al", "Old", new DateTime(2020, 5, 1, 8, 30, 52));
-            //Test ReadMessage w 2 EJ messages
-            Add("Cat", "Al", "Old", new DateTime(2019, 5, 1, 8, 30, 52));
-            //Test Inbox w first EJ message and Cat Message
-            Add("Jim", "Al", "Message 1", new DateTime(2022, 1, 1, 8, 30, 52));
-            Add("John", "Joe", "Test 2", new DateTime(2022, 2, 1, 8, 30, 52));
-            Add("Steve", "Al", "Hi", new DateTime(2022, 3, 1, 8, 30, 52));
-            Add("Al", "Steve", "Hello", new DateTime(2022, 4, 1, 8, 30, 52));
-            Add("Jim", "Al", "Hi!", new DateTime(2022, 5, 1, 9, 30, 52));
-            Add("Al", "Joe", "Goodbye", new DateTime(2022, 6, 1, 8, 30, 52));
-            Add("Joe", "Al", "Goodbye!", new DateTime(2022, 7, 1, 8, 30, 52));
-            Add("Steve", "Al", "See ya", new DateTime(2022, 8, 1, 8, 30, 52));
-            Add("Joe", "Al", "Latest Test", new DateTime(2022, 9, 1, 8, 30, 52));
+
+            //start timing
+
+            for (int i = 0; i < 1000; i++)
+            {
+                Add("EJ", "Al", "New", new DateTime(2023, 5, 1, 8, 30, 52));
+                Add("EJ", "Al", "Old", new DateTime(2020, 5, 1, 8, 30, 52));
+                Add("Cat", "Al", "Old", new DateTime(2019, 5, 1, 8, 30, 52));
+                Add("Jim", "Al", "Message 1", DateTime.UtcNow);
+                Add("John", "Joe", "Test 2", DateTime.UtcNow);
+                Add("Steve", "Al", "Hi", DateTime.UtcNow);
+                Add("Al", "Steve", "Hello", DateTime.UtcNow);
+                Add("Jim", "Al", "Hi!", DateTime.UtcNow);
+                Add("Al", "Joe", "Goodbye", DateTime.UtcNow);
+                Add("Joe", "Al", "Goodbye!", DateTime.UtcNow);
+                Add("Steve", "Al", "See ya", DateTime.UtcNow);
+                Add("Joe", "Al", "Latest Test", DateTime.UtcNow);
+            }
+            //Takes around 300 milliseconds for 1000 loop iterations, 3/10 millisecondfor one iteration.
             
         }
-
         public List<Message> GetAll() => Messages;
 
 
@@ -127,66 +131,108 @@ namespace HW2.Services
 
 
         public List<Message> Inbox(string user) {
-
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
             var Corresponders = new List<string>();
-            
+
             var t = new Message();
             //temporary container to switch order of list around
 
-            for (int i=0;  i < (Messages.Count -1); i++)
+            //for (int i = 0; i < (Messages.Count - 1); i++)
+            //{
+
+            //    if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
+            //    {
+            //        t = Messages[i];
+            //        Messages[i] = Messages[i + 1];
+            //        Messages[i + 1] = t;
+            //        if (i > 0) { i -= 2; };
+            //    }
+
+            //}
+            //// orders Messages by date
+            ////Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
+
+            //for (int i = Messages.Count - 1; i >= 0; i--)
+            //{
+
+            //    if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To))
+            //    {
+            //        Corresponders.Add(Messages[i].To);
+            //    }
+            //    if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
+            //    {
+            //        Corresponders.Add(Messages[i].From);
+            //    }
+
+            //}
+            ////finds all messages sent or received by user, then collects name of corresponder
+
+
+            //for (int j = 0; j < Corresponders.Count; j++)
+            //{
+
+
+            //    for (int i = 0; i < Messages.Count; i++)
+            //    {
+            //        if ((Messages[i].To == user || Messages[i].From == user) &&
+            //            (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
+            //        { ConvoThread.Add(Messages[i]); }
+
+            //        //Collects all messages between a user and a corresponder   
+
+            //    }
+
+            //    inbox.Add(ConvoThread[ConvoThread.Count - 1]);
+            //collects most recent message between user and corresponder then moves on to next corresponder
+            //Average = 623 milliseconds
+            //}
+
+
+            //new inbox Average = 550 milliseconds - difference = 73
+            for (int i = 0; i < Messages.Count; i++)
             {
-                
-                if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
-                {
-                    t = Messages[i];
-                    Messages[i] = Messages[i + 1];
-                    Messages[i + 1] = t;
-                    if (i > 0) { i-=2;};
-                }
+                if (Messages[i].To == user || Messages[i].From == user)
+                { ConvoThread.Add(Messages[i]); }
 
             }
-            // orders Messages by date
-            // Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
+            //Collect all messages sent/received by user
 
-            for (int i = Messages.Count - 1; i >= 0; i--) {
-
-                if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To)) {
-                    Corresponders.Add(Messages[i].To);
-                }
-                if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
-                {
-                    Corresponders.Add(Messages[i].From);
-                }
-
-            }
-            //finds all messages sent or received by user, then collects name of corresponder
-           
-
-            for (int j=0; j < Corresponders.Count; j++)
+            for (int i = 0; i < (ConvoThread.Count - 1); i++)
             {
 
-
-                for (int i = 0; i < Messages.Count; i++)
+                if (ConvoThread[i].CreatedAt > ConvoThread[i + 1].CreatedAt)
                 {
-                    if ((Messages[i].To == user || Messages[i].From == user) &&
-                        (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
-                            { ConvoThread.Add(Messages[i]); }
-                    
-                 //Collects all messages between a user and a corresponder   
-
+                    t = ConvoThread[i];
+                    ConvoThread[i] = ConvoThread[i + 1];
+                    ConvoThread[i + 1] = t;
+                    if (i > 0) { i -= 2; };
                 }
-               
-                inbox.Add(ConvoThread[ConvoThread.Count - 1]);
-                //collects most recent message between user and corresponder then moves on to next corresponder
-               
+
             }
+            //organize user's messages by date
+
+            string j;
+            //placeholder for corresponder
+            for (int i = (ConvoThread.Count - 1); i >= 0; i--)
+            {
+                if (ConvoThread[i].To == user) { j = ConvoThread[i].From; }
+                else { j = ConvoThread[i].To; }
+                if (!Corresponders.Contains(j)) { inbox.Add(ConvoThread[i]); Corresponders.Add(j); }
+            }
+            //starting with most recent, collect message if a message involving that corresponder hasn't already been
+            //added to the list
+
+            stopwatch.Stop();
+                var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
+                Console.WriteLine(stopwatchresult);
+                return inbox;
 
 
-
-            return inbox;
         }
 
     }
+
 }
