@@ -73,12 +73,11 @@ namespace HW2.Services
         public List<Message> ReadMessage(string user, string other) {
 
             var ConvoThread = new List<Message> { };
-            int i;
 
             if (user == other)
             {
 
-                for (i = Messages.Count - 1; i >= 0; i--)
+                for (int i = Messages.Count - 1; i >= 0; i--)
                 {
                     if (Messages[i].To == user && Messages[i].From == user)
                     {
@@ -94,7 +93,7 @@ namespace HW2.Services
 
             else
             {
-                for (i = Messages.Count - 1; i >= 0; i--)
+                for (int i = Messages.Count - 1; i >= 0; i--)
                 {
                     if ((Messages[i].To == user || Messages[i].From == user) &&
                         (Messages[i].To == other || Messages[i].From == other))
@@ -109,7 +108,7 @@ namespace HW2.Services
             //temporary message container for switching message order
    
             //organizes ConvoThread by newest to oldest
-            for (i=0; i < (ConvoThread.Count - 1); i++) {
+            for (int i=0; i < (ConvoThread.Count - 1); i++) {
 
 
                 if (ConvoThread[i].CreatedAt < ConvoThread[i + 1].CreatedAt)
@@ -132,13 +131,11 @@ namespace HW2.Services
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
             var Corresponders = new List<string>();
-            int i;
-            int j;
-           
+            
             var t = new Message();
             //temporary container to switch order of list around
 
-            for (i=0;  i < (Messages.Count -1); i++)
+            for (int i=0;  i < (Messages.Count -1); i++)
             {
                 
                 if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
@@ -153,7 +150,7 @@ namespace HW2.Services
             // orders Messages by date
             // Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
 
-            for (i = Messages.Count - 1; i >= 0; i--) {
+            for (int i = Messages.Count - 1; i >= 0; i--) {
 
                 if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To)) {
                     Corresponders.Add(Messages[i].To);
@@ -167,11 +164,11 @@ namespace HW2.Services
             //finds all messages sent or received by user, then collects name of corresponder
            
 
-            for (j=0; j < Corresponders.Count; j++)
+            for (int j=0; j < Corresponders.Count; j++)
             {
 
 
-                for (i = 0; i < Messages.Count; i++)
+                for (int i = 0; i < Messages.Count; i++)
                 {
                     if ((Messages[i].To == user || Messages[i].From == user) &&
                         (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
