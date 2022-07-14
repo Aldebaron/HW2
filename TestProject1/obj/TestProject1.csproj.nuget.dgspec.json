@@ -1,34 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\TestProject1\\TestProject1.csproj": {}
+    "/Users/allielevin/Projects/GitHub/GitHub/TestProject1/TestProject1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\HW2.csproj": {
+    "/Users/allielevin/Projects/GitHub/GitHub/HW2/HW2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\HW2.csproj",
+        "projectUniqueName": "/Users/allielevin/Projects/GitHub/GitHub/HW2/HW2.csproj",
         "projectName": "HW2",
-        "projectPath": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\HW2.csproj",
-        "packagesPath": "C:\\Users\\jpetsche.REDROCK\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\obj\\",
+        "projectPath": "/Users/allielevin/Projects/GitHub/GitHub/HW2/HW2.csproj",
+        "packagesPath": "/Users/allielevin/.nuget/packages/",
+        "outputPath": "/Users/allielevin/Projects/GitHub/GitHub/HW2/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\jpetsche.REDROCK\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
+          "/Users/allielevin/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\Microsoft SDKs\\Service Fabric\\packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://redrocktechsolutions.pkgs.visualstudio.com/_packaging/PlatformFeed/nuget/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -69,42 +61,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.302/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\TestProject1\\TestProject1.csproj": {
+    "/Users/allielevin/Projects/GitHub/GitHub/TestProject1/TestProject1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\TestProject1\\TestProject1.csproj",
+        "projectUniqueName": "/Users/allielevin/Projects/GitHub/GitHub/TestProject1/TestProject1.csproj",
         "projectName": "TestProject1",
-        "projectPath": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\TestProject1\\TestProject1.csproj",
-        "packagesPath": "C:\\Users\\jpetsche.REDROCK\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\TestProject1\\obj\\",
+        "projectPath": "/Users/allielevin/Projects/GitHub/GitHub/TestProject1/TestProject1.csproj",
+        "packagesPath": "/Users/allielevin/.nuget/packages/",
+        "outputPath": "/Users/allielevin/Projects/GitHub/GitHub/TestProject1/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\jpetsche.REDROCK\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
+          "/Users/allielevin/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\Microsoft SDKs\\Service Fabric\\packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://redrocktechsolutions.pkgs.visualstudio.com/_packaging/PlatformFeed/nuget/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\HW2.csproj": {
-                "projectPath": "C:\\Users\\jpetsche.REDROCK\\source\\repo-Other\\Al\\githubHW2\\HW2\\HW2.csproj"
+              "/Users/allielevin/Projects/GitHub/GitHub/HW2/HW2.csproj": {
+                "projectPath": "/Users/allielevin/Projects/GitHub/GitHub/HW2/HW2.csproj"
               }
             }
           }
@@ -155,7 +139,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.302/RuntimeIdentifierGraph.json"
         }
       }
     }
