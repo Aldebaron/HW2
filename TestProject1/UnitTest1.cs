@@ -1,4 +1,5 @@
 using GaiaShare.Helpers;
+using HW2.Services;
 
 namespace TestProject1
 {
@@ -20,7 +21,7 @@ namespace TestProject1
         }
 
         [Fact]
-        public void Test3()
+        public void GoodMath()
         { 
             //arrange
             int a = 2;
@@ -32,7 +33,7 @@ namespace TestProject1
         }
 
         [Fact]
-        public void Test4()
+        public void BadMath()
         {
             //arrange
             int a = 2;
@@ -46,12 +47,12 @@ namespace TestProject1
         //and if it is it does nothing, but if it isn't then it prints the message in the second bit?
 
         [Fact]
-        public void Test5()
+        public void CheckAdd()
         {
             //arrange?
 
 
-            var m = HW2.Services.MessagingService.Add("Al", "EJ", "BIRTHDAY", DateTime.UtcNow);
+            var m = MessagingService.Add("Al", "EJ", "BIRTHDAY", DateTime.UtcNow);
             //What's wrong with this? I had a similar problem with the controller when I first started
             //working on the controller, and I think I remember solving it by bringing in "_msgService" but
             //it doesn't like that here, I think because _msgService is private.
@@ -67,11 +68,11 @@ namespace TestProject1
 
 
         [Fact]
-        public void Test6()
+        public void CheckMessages()
         {
             //arrange?
            
-            var m = HW2.Services.MessagingService.Messages[0];
+            var m = MessagingService.Messages[0];
             //This throws an index out of range exception, almost like Messages is empty what do I do about that?
             //Test 9 confirms that Messages is empty
 
@@ -83,11 +84,12 @@ namespace TestProject1
         }
 
         [Fact]
-        public void Test7()
+        public void CheckRead()
         {
             //arrange
-            var m = HW2.Services.MessagingService.ReadMessage("Al", "EJ");
+            var m = MessagingService.ReadMessage("Al", "EJ");
             //same problem as Test 5, so the issue isn't just with Add()
+            //Would changing [Fact] to [TestMethod] do anything?
 
             //act
             int b = m.Count;
@@ -97,13 +99,13 @@ namespace TestProject1
         }
 
         [Fact]
-        public void Test8()
+        public void DatabaseCheck1()
         {
             //arrange
             int m;
 
             //act
-             m = HW2.Services.MessagingService.Messages.Count;
+             m = MessagingService.Messages.Count;
             //splitting it up this way to make it fit A/A/A seems like cheating, is there a diffferent
             //way that I should be doing this?
 
@@ -112,13 +114,13 @@ namespace TestProject1
         }
 
         [Fact]
-        public void Test9()
+        public void DatabaseCheck2()
         {
             //arrange
             int m;
 
             //act
-            m = HW2.Services.MessagingService.Messages.Count;
+            m = MessagingService.Messages.Count;
             
 
             //assert
