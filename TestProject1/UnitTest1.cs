@@ -22,18 +22,20 @@ namespace TestProject1
 
         [Fact]
         public void GoodMath()
-        { 
+            //Just an example of a passed test
+        {
             //arrange
             int a = 2;
             int b = 3;
             //act
             int c = a * b;
             //assert
-            Assert.True(c == 6, "quick maths") ;
+            Assert.True(c == 6, "quick maths");
         }
 
         [Fact]
         public void BadMath()
+            //Just an example of a failed test
         {
             //arrange
             int a = 2;
@@ -48,6 +50,8 @@ namespace TestProject1
 
         [Fact]
         public void CheckAdd()
+            //Just to see how Add would work in tests, Assert statement uses Id number
+            //to see if it gets added before or after the database is built
         {
             //arrange?
 
@@ -59,16 +63,18 @@ namespace TestProject1
 
 
             //act?
-            var ID = (m.Id - 1000) / 2;
+            
 
             //assert
-            Assert.True(m.To == "EJ", ID.ToString());
+            Assert.True(m.Id != null, m.Id.ToString());
             //How could I include text in this as well as the variable?
         }
 
 
         [Fact]
         public void CheckMessages()
+            //Checks to see if the first message in the database is what I expect it to be,
+            //as a way to test the database
         {
             //arrange?
            
@@ -85,6 +91,8 @@ namespace TestProject1
 
         [Fact]
         public void CheckRead()
+            //Tests the ability to use ReadMessage by checking to see if ReadMessage
+            //produces the right number of messages
         {
             //arrange
             var m = MessagingService.ReadMessage("Al", "EJ");
@@ -100,6 +108,7 @@ namespace TestProject1
 
         [Fact]
         public void DatabaseCheck1()
+            //Checks if the database length is what it's supposed to be (before anything else gets added)
         {
             //arrange
             int m;
@@ -115,6 +124,7 @@ namespace TestProject1
 
         [Fact]
         public void DatabaseCheck2()
+            //Checks if the database is empty
         {
             //arrange
             int m;
