@@ -93,7 +93,37 @@ namespace TestProject1
             int b = m.Count;
 
             //assert
-            Assert.True(b == 2000, "bad inbox");
+            Assert.True(b == 2000, "bad ConvoThread");
+        }
+
+        [Fact]
+        public void Test8()
+        {
+            //arrange
+            int m;
+
+            //act
+             m = HW2.Services.MessagingService.Messages.Count;
+            //splitting it up this way to make it fit A/A/A seems like cheating, is there a diffferent
+            //way I should be doing this?
+
+            //assert
+            Assert.True(m == 12000, "Messages not working");
+        }
+
+        [Fact]
+        public void Test9()
+        {
+            //arrange
+            int m;
+
+            //act
+            m = HW2.Services.MessagingService.Messages.Count;
+            //splitting it up this way to make it fit A/A/A seems like cheating, is there a diffferent
+            //way I should be doing this?
+
+            //assert
+            Assert.False(m == 0, "Messages reeally not working");
         }
 
     }
