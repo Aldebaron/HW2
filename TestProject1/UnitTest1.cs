@@ -5,6 +5,13 @@ namespace TestProject1
 {
     public class UnitTest1
     {
+        private MessagingService MsgService;
+
+        public UnitTest1()
+        {
+            MsgService = new MessagingService();
+        }
+
         [Fact]
         public void Test1()
         {
@@ -17,7 +24,7 @@ namespace TestProject1
         {
             var delta = TimeHelper.getDateTimeDelta(new DateTime(2022, 5, 1, 12, 0, 0));
             Console.WriteLine("hello world");
-            Assert.True(delta.Length < 10, "text was not returned.");
+            Assert.True(delta.Length > 1, "Time delta text was not returned.");
         }
 
         [Fact]
@@ -33,41 +40,46 @@ namespace TestProject1
             Assert.True(c == 6, "quick maths");
         }
 
+        //Just an example of a failed test
         [Fact]
         public void BadMath()
-            //Just an example of a failed test
         {
             //arrange
             int a = 2;
             int b = 3;
+            
             //act
             int c = a * b;
+        
             //assert
             Assert.True(c == 5, "bad maths");
+            //So for Assert.True or Assert.False, it checks if the asserted thing is true of the first bit,
+            //and if it is it does nothing, but if it isn't then it prints the message in the second bit?
+            // JVP-Jul-2022 -- Correct! Here's a crash course in Testing: https://auth0.com/blog/xunit-to-test-csharp-code/
+            // Get more descriptive with your assert message (second param). And test out Assert.Equal here.  What other Assert methods can you use in this class?
         }
-        //So for Assert.True or Assert.False, it checks if the asserted thing is true of the first bit,
-        //and if it is it does nothing, but if it isn't then it prints the message in the second bit?
 
+        //Just to see how Add would work in tests, Assert statement uses Id number
+        //to see if it gets added before or after the database is built
+        // NOTE: Get in the habit of adding comments for the function above the function like this. (JVP-Jul-2022)
         [Fact]
         public void CheckAdd()
-            //Just to see how Add would work in tests, Assert statement uses Id number
-            //to see if it gets added before or after the database is built
         {
-            //arrange?
-
-
-            var m = MessagingService.Add("Al", "EJ", "BIRTHDAY", DateTime.UtcNow);
+            //arrange
+            var m = MsgService.Add("Al", "EJ", "BIRTHDAY", DateTime.UtcNow);
             //What's wrong with this? I had a similar problem with the controller when I first started
             //working on the controller, and I think I remember solving it by bringing in "_msgService" but
             //it doesn't like that here, I think because _msgService is private.
+            // JVP-Jul-2022 You are on the right track. You must create an Object before you can "add" to it.
+            // _msgService is kinda magic.
+            // MsgService is the same concept, but I've created a constructor to instantiate the object.
+            // Homework: use the global MsgService 
 
-
-            //act?
-            
 
             //assert
-            Assert.True(m.Id != null, m.Id.ToString());
-            //How could I include text in this as well as the variable?
+            Assert.True(m.Id > 0, "Id was not greater than zero, it was: " + m.Id.ToString()); // Greater than zero is "business logic" we have stated in the imaginary specification that an id must be positive.
+            //How could I include text in this as well as the variable? -- Is the above answer what you are asking? (JVP-Jul-2022)
+            //TODO: Assert The ID is even. (business logic)
         }
 
 
@@ -76,17 +88,24 @@ namespace TestProject1
             //Checks to see if the first message in the database is what I expect it to be,
             //as a way to test the database
         {
-            //arrange?
+            //arrange
+            int count = 10; // expected number of messages (change to fit your test case)
+            var body = "Message body"; // Search a list of messages (between two people) to assert this message is in the list.
            
             var m = MessagingService.Messages[0];
             //This throws an index out of range exception, almost like Messages is empty what do I do about that?
             //Test 9 confirms that Messages is empty
 
-            //act?
+            //act
+            // Add message or two here. I'll give you a specific case to write:
+            // 1) add a random message.
+            // 2) add a message with contents "body" per above.
+            // 3) add a random message.
 
             //assert
             Assert.True(m.To == "EJ", "The database first message is not what it should be");
-           
+            // TODO: Assert Count of messages
+            // TODO: Assert "body" message is contained in the list.
         }
 
         [Fact]
@@ -95,15 +114,15 @@ namespace TestProject1
             //produces the right number of messages
         {
             //arrange
-            var m = MessagingService.ReadMessage("Al", "EJ");
-            //same problem as Test 5, so the issue isn't just with Add()
-            //Would changing [Fact] to [TestMethod] do anything?
-
+            int count = 10; // count of messages
+            //TODO: fix like others
+            //var m = MessagingService.ReadMessage("Al", "EJ");
+            
             //act
-            int b = m.Count;
+            int b = 0; //m.Count;
 
             //assert
-            Assert.True(b == 2000, "bad ConvoThread");
+            Assert.True(b == count, "bad ConvoThread");
         }
 
         [Fact]
