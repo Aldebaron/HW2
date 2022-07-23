@@ -7,7 +7,7 @@ namespace HW2.Services
     public class MessagingService
     {
         public static int NextId = 998;
-        public static List<Message> Messages = new List<Message>(); // Database of all messages
+        private static List<Message> Messages = new List<Message>(); // Database of all messages
 
         public MessagingService()
         {
