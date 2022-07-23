@@ -4,20 +4,17 @@ namespace TestProject1
 {
     public class MessagingTests
     {
-        private MessagingService MsgService;
+        private MessagingService MsgService; // for the local version, should I cut this as well? And just add "var" to each local assignment?
 
-        public MessagingTests()
-        {
-            MsgService = new MessagingService();
-        }
-        
         /// <summary>
         /// Ensure that the messaging service has a specific number of messages in the database between Al and Joe
         /// </summary>
         [Fact]
         public void ThreadAlJoe()
         {
+
             // Arrange
+            MsgService = new MessagingService();
             var m = MsgService;
             int count = 3000;
 
@@ -35,6 +32,7 @@ namespace TestProject1
         public void CheckAdd()
         {
             //arrange
+            MsgService = new MessagingService();
             var m = MsgService.Add("Al", "EJ", "BIRTHDAY", DateTime.UtcNow);
             int i;
 
@@ -52,6 +50,7 @@ namespace TestProject1
         public void CheckMessages()
         {
             //arrange
+            MsgService = new MessagingService();
             int count = 1; // expected number of messages
             var body = "Message body"; // specified body
             int m;
@@ -87,7 +86,8 @@ namespace TestProject1
         public void CheckRead()
         {
             //arrange
-            int count = 2001; // expected count of messages
+            MsgService = new MessagingService();
+            int count = 2000; // expected count of messages
             var m = MsgService.ReadMessage("Al", "EJ");               
                            
             //act
@@ -97,6 +97,7 @@ namespace TestProject1
             //asserts that count of thread equals expectation (count)
             Assert.True(b == count, "bad ConvoThread");
         }
-        
+        //This fails every time, but none of the others do! And b is a different number every time, ~3900. I have no idea why.
+        //With a local MsgService, this works! I like the local better than global for these tests, it's much easier to keep track of. 
     }
 }
