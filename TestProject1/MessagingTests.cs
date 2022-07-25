@@ -14,12 +14,12 @@ namespace TestProject1
         [Fact]
         public void ThreadAlJoe()
         {
-            var localService = new MessagingService();
+            
             // Arrange
             int count = 3000;
 
             // Act
-            var thread = localService.ReadMessage("Al", "Joe");
+            var thread = MsgService.ReadMessage("Al", "Joe");
             Console.WriteLine("Messages in thread: " + thread.Count);
 
             // Assert
@@ -88,11 +88,11 @@ namespace TestProject1
         public void CheckReadCountAlEJ()
         {
             //arrange
-            var localService = new MessagingService();
+            //var localService = new MessagingService();
             int count = 2000; // expected count of messages
                            
             //act
-            var m = localService.ReadMessage("Al", "EJ"); 
+            var m = MsgService.ReadMessage("Al", "EJ"); 
             int b = m.Count; // actual count of messages
 
             //assert
@@ -100,6 +100,6 @@ namespace TestProject1
         }
         //This fails every time, but none of the others do! And b is a different number every time, ~3900. I have no idea why.
         // NOTE: YES!! You've found what I wanted you to see here. Continue to use the global variable.
-        //The global variable? The comment at the top sounded like we were switching to a local variable, did I misunderstand
+        //So this one keeps the global variable and the ones that you put pickanewname in use a local?
     }
 }
