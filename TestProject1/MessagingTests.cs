@@ -115,7 +115,5 @@ namespace TestProject1
 
         //With a local MsgService, this works! I like the local better than global for these tests, it's much easier to keep track of. 
     }
-
-    //Just spent an hour battling visual studios after one very small mistake, which I will never make again. Just testing to see if
-    //vs has finally forgiven me.
+    //2nd test
 }
