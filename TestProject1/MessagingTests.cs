@@ -5,8 +5,8 @@ namespace TestProject1
     public class MessagingTests
     {
         private MessagingService MsgService = new MessagingService(); // for the local version, should I cut this as well? And just add "var" to each local assignment?
-                                                                      // I added new here, so you don't have to do it in each function. This will also showcase the issue I intended to bring up. See ChechReadCountALEJ().
-                                                                      // For the local version, pick a different name. Pick only one different name and be consistent with the local variable, since it's local, each function will create a new one and not use a prior version. 
+        // I added new here, so you don't have to do it in each function. This will also showcase the issue I intended to bring up. See ChechReadCountALEJ().
+        // For the local version, pick a different name. Pick only one different name and be consistent with the local variable, since it's local, each function will create a new one and not use a prior version. 
 
         /// <summary>
         /// Ensure that the messaging service has a specific number of messages in the database between Al and Joe
@@ -54,7 +54,7 @@ namespace TestProject1
             var body = "Hi, let's test special chars?&$%^ at the same time. This always needs consideration when viewing in an HTML page or URL (get)."; // specified body
             MsgService = new MessagingService();
             MsgService.Add("Cat", "Other Cat", "meow", DateTime.UtcNow);
-            MsgService.Add("Jim", "Steve", "Message body", DateTime.UtcNow);
+            MsgService.Add("Jim", "Steve", body, DateTime.UtcNow);
             MsgService.Add("Al", "Joe", "Random messages are oddly hard to write", DateTime.UtcNow);
             int m; // remove
             string msgFound = "no"; // change to boolean. You are using yes/no as a string -- why not use the precise data type: boolean
