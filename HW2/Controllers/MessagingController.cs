@@ -86,6 +86,18 @@ namespace HW2.Controllers
             return list;
         }
 
+        [HttpGet("Search/{user}/{other}/{search}")]
+        public ActionResult<List<Message>> SearchMessage(string user, string other, string search)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var messages = new List<Message>();
+            messages = _msgService.ReadMessage(user, other);
+
+            //TODO: look for contents 'search'
+
+            return messages;
+        }
+
         /// <summary>
         /// This function should be called as a way to authenticate a user is who they say.
         /// For example, any one can call the endpoint SendMessage(). If a nefarious user
