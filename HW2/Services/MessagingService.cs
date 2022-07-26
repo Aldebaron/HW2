@@ -75,8 +75,6 @@ namespace HW2.Services
 
 
         public List<Message> ReadMessage(string user, string other) {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var ConvoThread = new List<Message> { };
 
             if (user == other)
@@ -89,12 +87,9 @@ namespace HW2.Services
                         ConvoThread.Add(Messages[i]);
                     }
                     i--;
-
                 }
-
             }
             //Fail fast! Special case (messages sent to self) handled before usual situation
-
 
             else
             {
@@ -126,12 +121,72 @@ namespace HW2.Services
 
                 }
 
-            stopwatch.Stop();
-            var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
-            Console.WriteLine(stopwatchresult);
+           
             return ConvoThread;
         }
 
+
+        public List<Message> SearchConvo(string user, string other, string search)
+        {
+            var ConvoThread = new List<Message> { };
+            var SearchThread = new List<Message> { };
+
+            if (user == other)
+            {
+
+                for (int i = Messages.Count - 1; i >= 0; i--)
+                {
+                    if (Messages[i].To == user && Messages[i].From == user)
+                    {
+                        ConvoThread.Add(Messages[i]);
+                    }
+                    i--;
+                }
+            }
+            //Fail fast! Special case (messages sent to self) handled before usual situation
+
+            else
+            {
+                for (int i = Messages.Count - 1; i >= 0; i--)
+                {
+                    if ((Messages[i].To == user || Messages[i].From == user) &&
+                        (Messages[i].To == other || Messages[i].From == other))
+                    { ConvoThread.Add(Messages[i]); }
+
+                }
+            }
+            //if a message in the database is sent/received by user/corresponder, add it to ConvoThread
+
+
+            var t = new Message();
+            //temporary message container for switching message order
+
+            //organizes ConvoThread by newest to oldest
+            for (int i = 0; i < (ConvoThread.Count - 1); i++)
+            {
+
+
+                if (ConvoThread[i].CreatedAt < ConvoThread[i + 1].CreatedAt)
+                {
+                    t = ConvoThread[i];
+                    ConvoThread[i] = ConvoThread[i + 1];
+                    ConvoThread[i + 1] = t;
+                    if (i > 0) { i -= 2; };
+                }
+
+            }
+
+            for (int i = 0; i < (ConvoThread.Count - 1); i++) {
+                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+            }
+            //if message in convothread has search term in body, add to searchthread.
+            //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
+            //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
+            //and I think that has more practical merit, but I could also expand it if that's preferred.
+
+
+            return SearchThread;
+        }
 
         public List<Message> Inbox(string user) {
             
@@ -141,56 +196,6 @@ namespace HW2.Services
 
             var t = new Message();
             //temporary container to switch order of list around
-
-            //for (int i = 0; i < (Messages.Count - 1); i++)
-            //{
-
-            //    if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
-            //    {
-            //        t = Messages[i];
-            //        Messages[i] = Messages[i + 1];
-            //        Messages[i + 1] = t;
-            //        if (i > 0) { i -= 2; };
-            //    }
-
-            //}
-            //// orders Messages by date
-            ////Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
-
-            //for (int i = Messages.Count - 1; i >= 0; i--)
-            //{
-
-            //    if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To))
-            //    {
-            //        Corresponders.Add(Messages[i].To);
-            //    }
-            //    if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
-            //    {
-            //        Corresponders.Add(Messages[i].From);
-            //    }
-
-            //}
-            ////finds all messages sent or received by user, then collects name of corresponder
-
-
-            //for (int j = 0; j < Corresponders.Count; j++)
-            //{
-
-
-            //    for (int i = 0; i < Messages.Count; i++)
-            //    {
-            //        if ((Messages[i].To == user || Messages[i].From == user) &&
-            //            (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
-            //        { ConvoThread.Add(Messages[i]); }
-
-            //        //Collects all messages between a user and a corresponder   
-
-            //    }
-
-            //    inbox.Add(ConvoThread[ConvoThread.Count - 1]);
-            //collects most recent message between user and corresponder then moves on to next corresponder
-            //Average = 623 milliseconds
-            //}
 
 
             //new inbox Average = 550 milliseconds - difference = 73
@@ -232,6 +237,55 @@ namespace HW2.Services
 
 
         }
+
+        public List<Message> SearchAll(string user, string search)
+        {
+
+            var inbox = new List<Message>();
+            var ConvoThread = new List<Message>();
+            var Corresponders = new List<string>();
+            var SearchThread = new List<Message>();
+
+            var t = new Message();
+            //temporary container to switch order of list around
+
+
+            //new inbox Average = 550 milliseconds - difference = 73
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                if (Messages[i].To == user || Messages[i].From == user)
+                { ConvoThread.Add(Messages[i]); }
+
+            }
+            //Collect all messages sent/received by user
+
+            for (int i = 0; i < (ConvoThread.Count - 1); i++)
+            {
+
+                if (ConvoThread[i].CreatedAt > ConvoThread[i + 1].CreatedAt)
+                {
+                    t = ConvoThread[i];
+                    ConvoThread[i] = ConvoThread[i + 1];
+                    ConvoThread[i + 1] = t;
+                    if (i > 0) { i -= 2; };
+                }
+
+            }
+            //organize user's messages by date
+
+            for (int i = (ConvoThread.Count - 1); i >= 0; i--) {
+                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                else if (ConvoThread[i].To.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                else if (ConvoThread[i].From.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+
+            }
+            //if message in convothread contains search term, add it to searchthread.
+            //I believe that some messaging service search things repeat messages if they contain multiple instances of the
+            //search term. However, I think that's stupid. Unless you want me to do that, in which case it's not stupid.
+
+            return SearchThread;
+        }
+
 
     }
 

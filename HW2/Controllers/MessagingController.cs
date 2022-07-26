@@ -86,14 +86,25 @@ namespace HW2.Controllers
             return list;
         }
 
-        [HttpGet("Search/{user}/{other}/{search}")]
-        public ActionResult<List<Message>> SearchMessage(string user, string other, string search)
+        [HttpGet("SearchConvo/{user}/{other}/{search}")]
+        public ActionResult<List<Message>> SearchConvo(string user, string other, string search)
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.ReadMessage(user, other);
+            messages = _msgService.SearchConvo(user, other, search);
 
             //TODO: look for contents 'search'
+            //...huh?
+
+            return messages;
+        }
+
+        [HttpGet("SearchAll/{user}/{search}")]
+        public ActionResult<List<Message>> SearchAll(string user, string search)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var messages = new List<Message>();
+            messages = _msgService.SearchAll(user, search);
 
             return messages;
         }
