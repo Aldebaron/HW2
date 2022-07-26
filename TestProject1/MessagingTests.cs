@@ -42,10 +42,7 @@ namespace TestProject1
             localService.Add("Jim", "Steve", body, DateTime.UtcNow);
             localService.Add("Al", "Joe", "Random messages are oddly hard to write", DateTime.UtcNow);
             bool msgFound = false;
-            bool test = new bool(); // what is the default status of a bool if you don't specify?
-            //I wrote an assert statement for it but it won't accept an unnassigned variable even tho it's boolean
-            // Interesting, the new keyword seems to work, but setting = false is much easier.
-
+            
             //act
             var thread = localService.ReadMessage("Jim", "Steve");
             int m = thread.Count;
@@ -67,10 +64,8 @@ namespace TestProject1
             //assert
             //Asserts that Jim/Steve thread contains expected number of messages
             //Asserts that there is a message with the specified body
-            Assert.Equal(expectedCount, m); // It wouldn't allow me to include a failure message? It got very angry and very confusing.
-            // Did the computer get angry? hehe, I guess the failure message isn't allowed. The default message is not too bad.
+            Assert.Equal(expectedCount, m);
             Assert.True(msgFound, "There is no message with the body " + body);
-            Assert.False(test, "The default status of an unspecified bool is true"); // ok, we can remove this code.
         }
 
         //Checks to see if ReadMessage produces the right number of messages

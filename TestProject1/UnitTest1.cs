@@ -24,13 +24,16 @@ namespace TestProject1
             //arrange
             int a = 2;
             int b = 3;
+            object x = null;
             //act
             int c = a * b;
-            //assert
-            Assert.True(c == 6, "quick maths");
+            //asserts that the result of multiplication is what is expected
+            //asserts that the null object is null
+            Assert.Equal(6, c);
+            Assert.Null(x);
         }
 
-        //Just an example of a failed test
+
         [Fact]
         public void BadMath()
         {
@@ -43,7 +46,8 @@ namespace TestProject1
             //act
             int c = a * b;
             
-            //assert
+            //asserts that the result of multiplication is what is expected
+            //asserts that the result of multiplication isn't what it shouldn't be
             Assert.True(c == ans, "bad maths");
             Assert.NotEqual(wrong, c);
             // JVP-Jul-2022 -- Correct! Here's a crash course in Testing: https://auth0.com/blog/xunit-to-test-csharp-code/
@@ -58,5 +62,5 @@ namespace TestProject1
 
 
     }
-    //VSTest
+   
 }
