@@ -56,11 +56,7 @@ namespace HW2.Services
         public Message Add(string to, string from, string body, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
-            //How does a "new" statement work with an equality operator? ~A
-            var test = new DateTime(); // See what the value is. 
-			// Null is not an option with this type.
-			// We are checking to ensure Date set to something. If we get "new" then we want to set to current d/t.
-
+            
             var message = new Message(to, from, body, dt);
             NextId += 2;
             message.Id = NextId;
@@ -128,53 +124,8 @@ namespace HW2.Services
 
         public List<Message> SearchConvo(string user, string other, string search)
         {
-            var ConvoThread = new List<Message> { };
+            var ConvoThread = ReadMessage(user, other);
             var SearchThread = new List<Message> { };
-
-            if (user == other)
-            {
-
-                for (int i = Messages.Count - 1; i >= 0; i--)
-                {
-                    if (Messages[i].To == user && Messages[i].From == user)
-                    {
-                        ConvoThread.Add(Messages[i]);
-                    }
-                    i--;
-                }
-            }
-            //Fail fast! Special case (messages sent to self) handled before usual situation
-
-            else
-            {
-                for (int i = Messages.Count - 1; i >= 0; i--)
-                {
-                    if ((Messages[i].To == user || Messages[i].From == user) &&
-                        (Messages[i].To == other || Messages[i].From == other))
-                    { ConvoThread.Add(Messages[i]); }
-
-                }
-            }
-            //if a message in the database is sent/received by user/corresponder, add it to ConvoThread
-
-
-            var t = new Message();
-            //temporary message container for switching message order
-
-            //organizes ConvoThread by newest to oldest
-            for (int i = 0; i < (ConvoThread.Count - 1); i++)
-            {
-
-
-                if (ConvoThread[i].CreatedAt < ConvoThread[i + 1].CreatedAt)
-                {
-                    t = ConvoThread[i];
-                    ConvoThread[i] = ConvoThread[i + 1];
-                    ConvoThread[i + 1] = t;
-                    if (i > 0) { i -= 2; };
-                }
-
-            }
 
             for (int i = 0; i < (ConvoThread.Count - 1); i++) {
                 if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
@@ -183,7 +134,7 @@ namespace HW2.Services
             //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
             //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
             //and I think that has more practical merit, but I could also expand it if that's preferred.
-
+            // Good idea! Small details like this may not always be apparent at the initil development. Let's see how it goes. (JVP-Jul-2022)
 
             return SearchThread;
         }
@@ -232,15 +183,13 @@ namespace HW2.Services
             //starting with most recent, collect message if a message involving that corresponder hasn't already been
             //added to the list
 
-            
-                return inbox;
-
-
+            return inbox;
         }
 
+
+        // How can this code base be reduced??? (JVP-Jul-2022)
         public List<Message> SearchAll(string user, string search)
         {
-
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
             var Corresponders = new List<string>();
