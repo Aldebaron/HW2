@@ -74,10 +74,11 @@ namespace HW2.Services
         }
 
 
-        public List<Message> ReadMessage(string user, string other) {
+        public List<Message> ReadMessage(string user, string other, string? search, bool decider) {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var ConvoThread = new List<Message> { };
+            var SearchThread = new List<Message> { };
 
             if (user == other)
             {
@@ -126,72 +127,20 @@ namespace HW2.Services
 
                 }
 
-            stopwatch.Stop();
-            var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
-            Console.WriteLine(stopwatchresult);
+            
             return ConvoThread;
         }
 
 
-        public List<Message> Inbox(string user) {
+        public List<Message> Inbox(string user, string? search, bool decider) {
             
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
+            var SearchThread = new List<Message>();
             var Corresponders = new List<string>();
 
             var t = new Message();
             //temporary container to switch order of list around
-
-            //for (int i = 0; i < (Messages.Count - 1); i++)
-            //{
-
-            //    if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
-            //    {
-            //        t = Messages[i];
-            //        Messages[i] = Messages[i + 1];
-            //        Messages[i + 1] = t;
-            //        if (i > 0) { i -= 2; };
-            //    }
-
-            //}
-            //// orders Messages by date
-            ////Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
-
-            //for (int i = Messages.Count - 1; i >= 0; i--)
-            //{
-
-            //    if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To))
-            //    {
-            //        Corresponders.Add(Messages[i].To);
-            //    }
-            //    if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
-            //    {
-            //        Corresponders.Add(Messages[i].From);
-            //    }
-
-            //}
-            ////finds all messages sent or received by user, then collects name of corresponder
-
-
-            //for (int j = 0; j < Corresponders.Count; j++)
-            //{
-
-
-            //    for (int i = 0; i < Messages.Count; i++)
-            //    {
-            //        if ((Messages[i].To == user || Messages[i].From == user) &&
-            //            (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
-            //        { ConvoThread.Add(Messages[i]); }
-
-            //        //Collects all messages between a user and a corresponder   
-
-            //    }
-
-            //    inbox.Add(ConvoThread[ConvoThread.Count - 1]);
-            //collects most recent message between user and corresponder then moves on to next corresponder
-            //Average = 623 milliseconds
-            //}
-
 
             //new inbox Average = 550 milliseconds - difference = 73
             for (int i = 0; i < Messages.Count; i++)
@@ -218,19 +167,41 @@ namespace HW2.Services
 
             string j;
             //placeholder for corresponder
-            for (int i = (ConvoThread.Count - 1); i >= 0; i--)
+
+            if (decider == false)
             {
-                if (ConvoThread[i].To == user) { j = ConvoThread[i].From; }
-                else { j = ConvoThread[i].To; }
-                if (!Corresponders.Contains(j)) { inbox.Add(ConvoThread[i]); Corresponders.Add(j); }
-            }
-            //starting with most recent, collect message if a message involving that corresponder hasn't already been
-            //added to the list
+                for (int i = (ConvoThread.Count - 1); i >= 0; i--)
+                {
+                    if (ConvoThread[i].To == user) { j = ConvoThread[i].From; }
+                    else { j = ConvoThread[i].To; }
+                    if (!Corresponders.Contains(j)) { inbox.Add(ConvoThread[i]); Corresponders.Add(j); }
+                }
+                //starting with most recent, collect message if a message involving that corresponder hasn't already been
+                //added to the list
 
-            
+
                 return inbox;
+                //if decider is false, do the inbox code path, and return the most recent message from each convo
+            }
 
 
+            if (decider == true)
+            {
+                for (int i = (ConvoThread.Count - 1); i >= 0; i--)
+                {
+
+                    if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                    else if (ConvoThread[i].To.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                    else if (ConvoThread[i].From.Contains(search)) { SearchThread.Add(ConvoThread[i]); };
+                    //search won't ever be null in this loop bc the only time that search can be null is when the caller also sets bool to false.
+                }
+                return SearchThread;
+                //if the decider is true, do the search code path, and return all messages including the search term
+            }
+
+            else return null;
+            //it wasn't happy when I just had the two if statements bc it was concerned that a code path could not return
+            //a value. That's not how bools work, but I didn't want it to worry.
         }
 
     }

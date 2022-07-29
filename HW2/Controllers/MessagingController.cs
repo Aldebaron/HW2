@@ -82,7 +82,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var list = new List<Message>();
-            list = _msgService.Inbox(user);
+            list = _msgService.Inbox(user, null, false);
             return list;
         }
 
@@ -104,7 +104,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.SearchAll(user, search);
+            messages = _msgService.Inbox(user, search, true);
 
             return messages;
         }
