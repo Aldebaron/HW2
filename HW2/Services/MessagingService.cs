@@ -75,8 +75,7 @@ namespace HW2.Services
 
 
         public List<Message> ReadMessage(string user, string other, string? search, bool decider) {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //is there a generally used variable that I should've used in place of "decider"?
             var ConvoThread = new List<Message> { };
             var SearchThread = new List<Message> { };
 
@@ -127,8 +126,19 @@ namespace HW2.Services
 
                 }
 
-            
-            return ConvoThread;
+
+            if (decider == false) { return ConvoThread; }
+            //if the decider is false, then it's not a search and no further action is needed, so just return convothread
+
+            else {
+                for (int i = 0; i < (ConvoThread.Count - 1); i++)
+                {
+                    if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                    //Do we want this to include messages that have the search term in the sender's or receiver's username?
+                };
+                return SearchThread;
+            }
+            //else the decider must be true, so it is a search. Each message whose body contains the search term is added to the list that's returned.
         }
 
 
@@ -149,7 +159,7 @@ namespace HW2.Services
                 { ConvoThread.Add(Messages[i]); }
 
             }
-            //Collect all messages sent/received by user
+            //collect all messages sent/received by user
 
             for (int i = 0; i < (ConvoThread.Count - 1); i++)
             {
@@ -185,8 +195,7 @@ namespace HW2.Services
             }
 
 
-            if (decider == true)
-            {
+            else { 
                 for (int i = (ConvoThread.Count - 1); i >= 0; i--)
                 {
 
@@ -199,9 +208,7 @@ namespace HW2.Services
                 //if the decider is true, do the search code path, and return all messages including the search term
             }
 
-            else return null;
-            //it wasn't happy when I just had the two if statements bc it was concerned that a code path could not return
-            //a value. That's not how bools work, but I didn't want it to worry.
+        
         }
 
     }

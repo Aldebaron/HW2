@@ -69,7 +69,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.ReadMessage(user, other);
+            messages = _msgService.ReadMessage(user, other, null, false);
             return messages;
         }
 
@@ -91,7 +91,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.SearchConvo(user, other, search);
+            messages = _msgService.ReadMessage(user, other, search, true);
 
             //TODO: look for contents 'search'
             //...huh?
