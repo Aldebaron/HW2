@@ -131,59 +131,11 @@ namespace HW2.Services
             var ConvoThread = new List<Message> { };
             var SearchThread = new List<Message> { };
 
-            if (user == other)
-            {
-
-                for (int i = Messages.Count - 1; i >= 0; i--)
-                {
-                    if (Messages[i].To == user && Messages[i].From == user)
-                    {
-                        ConvoThread.Add(Messages[i]);
-                    }
-                    i--;
-                }
-            }
-            //Fail fast! Special case (messages sent to self) handled before usual situation
-
-            else
-            {
-                for (int i = Messages.Count - 1; i >= 0; i--)
-                {
-                    if ((Messages[i].To == user || Messages[i].From == user) &&
-                        (Messages[i].To == other || Messages[i].From == other))
-                    { ConvoThread.Add(Messages[i]); }
-
-                }
-            }
-            //if a message in the database is sent/received by user/corresponder, add it to ConvoThread
-
-
-            var t = new Message();
-            //temporary message container for switching message order
-
-            //organizes ConvoThread by newest to oldest
+            ConvoThread = ReadMessage(user, other);
             for (int i = 0; i < (ConvoThread.Count - 1); i++)
             {
-
-
-                if (ConvoThread[i].CreatedAt < ConvoThread[i + 1].CreatedAt)
-                {
-                    t = ConvoThread[i];
-                    ConvoThread[i] = ConvoThread[i + 1];
-                    ConvoThread[i + 1] = t;
-                    if (i > 0) { i -= 2; };
-                }
-
+                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); };
             }
-
-            for (int i = 0; i < (ConvoThread.Count - 1); i++) {
-                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
-            }
-            //if message in convothread has search term in body, add to searchthread.
-            //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
-            //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
-            //and I think that has more practical merit, but I could also expand it if that's preferred.
-
 
             return SearchThread;
         }
@@ -240,6 +192,9 @@ namespace HW2.Services
 
         public List<Message> SearchAll(string user, string search)
         {
+            //In order to use a call to Inbox for this instead, I'd need to make it so that inbox returns ConvoThread, not just inbox, because SearchAll
+            //searches all of a user's messages, not just the most recent from each person. I could add a "decider" type thing like I did in alt for that, but
+            //would that be the best way of doing that?
 
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
