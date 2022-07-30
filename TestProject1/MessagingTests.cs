@@ -81,6 +81,67 @@ namespace TestProject1
         //So this one keeps the global variable and the ones that you put pickanewname in use a local?
         // Let's talk about this in August.
 
+        //Checks SearchConvo
+        [Fact]
+        public void CheckSearchConvoAlJoeGoodbye()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            int expectedCount = 1000; // expected number of messages
+
+            //act
+            var c = localService.SearchConvo("Joe", "Al", "Goodbye!");
+            var d = localService.SearchConvo("Al", "Joe", "Goodbye!");
+
+            //assert
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
+
+        /// <summary>
+        /// Searches for text that is not in the two parties conversation. 
+        /// </summary>
+        [Fact]
+        public void CheckSearchConvoAlJoeNotFound()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            int expectedCount = 0; // expected number of messages
+
+            //act
+            var c = localService.SearchConvo("Joe", "Al", "See ya");
+            var d = localService.SearchConvo("Al", "Joe", "See ya");
+
+            //assert
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
+
+        /// <summary>
+        /// Testing the SearchConvo() endpoint for one word in a body of a message.
+        /// </summary>
+        [Fact]
+        public void CheckSearchConvoAlJoeUniverse()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            var body = "This is a test messages in a test universe. "; // expected count of messages
+            int expectedCount = 1; // expected number of messages
+
+            //act
+            var a = localService.Add("Joe", "Al", body, new DateTime());
+            var c = localService.SearchConvo("Joe", "Al", "universe");
+            var d = localService.SearchConvo("Al", "Joe", "universe");
+
+            //assert
+            Assert.Equal(body, a.Body);
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
+
         /// <summary>
         /// Ensure that the messaging service has a specific number of messages in the database between Al and Joe
         /// </summary>

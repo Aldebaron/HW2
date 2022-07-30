@@ -128,6 +128,11 @@ namespace HW2.Services
 
         public List<Message> SearchConvo(string user, string other, string search)
         {
+            //if message in convothread has search term in body, add to searchthread.
+            //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
+            //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
+            //and I think that has more practical merit, but I could also expand it if that's preferred.
+            // Good idea! Small details like this may not always be apparent at the initil development. Let's see how it goes. (JVP-Jul-2022)
             var ConvoThread = new List<Message> { };
             var SearchThread = new List<Message> { };
 
