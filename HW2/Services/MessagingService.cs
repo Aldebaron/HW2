@@ -74,7 +74,7 @@ namespace HW2.Services
         }
 
 
-        public List<Message> ReadMessage(string user, string other, string? search, bool decider) {
+        public List<Message> ReadMessage(string user, string other, string? search) {
             //is there a generally used variable that I should've used in place of "decider"?
             var ConvoThread = new List<Message> { };
             var SearchThread = new List<Message> { };
@@ -127,7 +127,7 @@ namespace HW2.Services
                 }
 
 
-            if (decider == false) { return ConvoThread; }
+            if (search == null) { return ConvoThread; }
             //if the decider is false, then it's not a search and no further action is needed, so just return convothread
 
             else {
@@ -142,7 +142,7 @@ namespace HW2.Services
         }
 
 
-        public List<Message> Inbox(string user, string? search, bool decider) {
+        public List<Message> Inbox(string user, string? search) {
             
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
@@ -178,7 +178,7 @@ namespace HW2.Services
             string j;
             //placeholder for corresponder
 
-            if (decider == false)
+            if (search == null)
             {
                 for (int i = (ConvoThread.Count - 1); i >= 0; i--)
                 {

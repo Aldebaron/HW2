@@ -69,7 +69,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.ReadMessage(user, other, null, false);
+            messages = _msgService.ReadMessage(user, other, null);
             return messages;
         }
 
@@ -82,7 +82,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var list = new List<Message>();
-            list = _msgService.Inbox(user, null, false);
+            list = _msgService.Inbox(user, null);
             return list;
         }
 
@@ -91,7 +91,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.ReadMessage(user, other, search, true);
+            messages = _msgService.ReadMessage(user, other, search);
 
             //TODO: look for contents 'search'
             //...huh?
@@ -104,7 +104,7 @@ namespace HW2.Controllers
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var messages = new List<Message>();
-            messages = _msgService.Inbox(user, search, true);
+            messages = _msgService.Inbox(user, search);
 
             return messages;
         }
