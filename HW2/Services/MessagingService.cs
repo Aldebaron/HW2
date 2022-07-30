@@ -56,7 +56,11 @@ namespace HW2.Services
         public Message Add(string to, string from, string body, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
-            
+            //How does a "new" statement work with an equality operator? ~A
+            var test = new DateTime(); // See what the value is. 
+			// Null is not an option with this type.
+			// We are checking to ensure Date set to something. If we get "new" then we want to set to current d/t.
+
             var message = new Message(to, from, body, dt);
             NextId += 2;
             message.Id = NextId;
@@ -124,25 +128,19 @@ namespace HW2.Services
 
         public List<Message> SearchConvo(string user, string other, string search)
         {
-            var ConvoThread = ReadMessage(user, other);
-            var SearchThread = new List<Message> { };
-
-<<<<<<< HEAD
-            for (int i = 0; i < (ConvoThread.Count - 1); i++) {
-                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
-            }
             //if message in convothread has search term in body, add to searchthread.
             //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
             //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
             //and I think that has more practical merit, but I could also expand it if that's preferred.
             // Good idea! Small details like this may not always be apparent at the initil development. Let's see how it goes. (JVP-Jul-2022)
-=======
+            var ConvoThread = new List<Message> { };
+            var SearchThread = new List<Message> { };
+
             ConvoThread = ReadMessage(user, other);
             for (int i = 0; i < (ConvoThread.Count - 1); i++)
             {
                 if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); };
             }
->>>>>>> fcd4bfb (Issue 7 Commit 1)
 
             return SearchThread;
         }
@@ -191,20 +189,18 @@ namespace HW2.Services
             //starting with most recent, collect message if a message involving that corresponder hasn't already been
             //added to the list
 
-            return inbox;
+            
+                return inbox;
+
+
         }
 
-
-        // How can this code base be reduced??? (JVP-Jul-2022)
         public List<Message> SearchAll(string user, string search)
         {
-<<<<<<< HEAD
-=======
             //In order to use a call to Inbox for this instead, I'd need to make it so that inbox returns ConvoThread, not just inbox, because SearchAll
             //searches all of a user's messages, not just the most recent from each person. I could add a "decider" type thing like I did in alt for that, but
             //would that be the best way of doing that?
 
->>>>>>> fcd4bfb (Issue 7 Commit 1)
             var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
             var Corresponders = new List<string>();
