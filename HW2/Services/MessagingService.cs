@@ -142,55 +142,7 @@ namespace HW2.Services
             var t = new Message();
             //temporary container to switch order of list around
 
-            //for (int i = 0; i < (Messages.Count - 1); i++)
-            //{
-
-            //    if (Messages[i].CreatedAt > Messages[i + 1].CreatedAt)
-            //    {
-            //        t = Messages[i];
-            //        Messages[i] = Messages[i + 1];
-            //        Messages[i + 1] = t;
-            //        if (i > 0) { i -= 2; };
-            //    }
-
-            //}
-            //// orders Messages by date
-            ////Would it be worth it to put this somewhere else so that Messages is always ordered by date? ~A
-
-            //for (int i = Messages.Count - 1; i >= 0; i--)
-            //{
-
-            //    if (Messages[i].From == user && !Corresponders.Contains(Messages[i].To))
-            //    {
-            //        Corresponders.Add(Messages[i].To);
-            //    }
-            //    if (Messages[i].To == user && !Corresponders.Contains(Messages[i].From))
-            //    {
-            //        Corresponders.Add(Messages[i].From);
-            //    }
-
-            //}
-            ////finds all messages sent or received by user, then collects name of corresponder
-
-
-            //for (int j = 0; j < Corresponders.Count; j++)
-            //{
-
-
-            //    for (int i = 0; i < Messages.Count; i++)
-            //    {
-            //        if ((Messages[i].To == user || Messages[i].From == user) &&
-            //            (Messages[i].To == Corresponders[j] || Messages[i].From == Corresponders[j]))
-            //        { ConvoThread.Add(Messages[i]); }
-
-            //        //Collects all messages between a user and a corresponder   
-
-            //    }
-
-            //    inbox.Add(ConvoThread[ConvoThread.Count - 1]);
-            //collects most recent message between user and corresponder then moves on to next corresponder
-            //Average = 623 milliseconds
-            //}
+            
 
 
             //new inbox Average = 550 milliseconds - difference = 73
