@@ -12,8 +12,9 @@ namespace TestProject1
         {
             MsgService = new MessagingService();
         }
-
-        //Tests that Id is at least even, like it's supposed to be
+        /// <summary>
+        ///Tests that Id is at least even, like it's supposed to be
+        /// <summary>
         [Fact]
         public void CheckAdd()
         {
@@ -29,8 +30,9 @@ namespace TestProject1
             //Assert that Id is even
             Assert.Equal(0, i); 
         }
-
-        //Checks for expected count of messages and for a message with specified body.
+        /// <summary>
+        ///Checks for expected count of messages and for a message with specified body.
+        /// <summary>
         [Fact]
         public void CheckMessages()
         {
@@ -47,16 +49,6 @@ namespace TestProject1
             var thread = localService.ReadMessage("Jim", "Steve");
             int m = thread.Count;
 
-            //WAIT- what if I added a function in MessagingServices that searches all of a users messages for
-            //ones containing a keyphrase? This wouldn't really solve the above problem, you'd still need to know
-            //at least one user involved, but it would add some cool functionality to the messaging service
-            // That's called big brother. Complete view. However this might be an admin function we add down the road for monitoring user's activity. 
-            // Still big brother, however if users become unruly, we might have to ban/block their account.
-            //No, sorry, I mean like how Messages on the iphone offers a search *your own* messages function. And when it's actually in use,
-            //bc you'd be searching your own messages, the user would always be known.
-            // That could work. We could also implemented search via client side code.
-            // Good idea, create an end point that contains
-
             for (int i =0; i < m; i++) {
                 if (thread[i].Body == body) { msgFound = true; }
             }
@@ -67,8 +59,9 @@ namespace TestProject1
             Assert.Equal(expectedCount, m);
             Assert.True(msgFound, "There is no message with the body " + body);
         }
-
-        //Checks to see if ReadMessage produces the right number of messages
+        /// <summary>
+        ///Checks to see if ReadMessage produces the right number of messages
+        /// <summary>
         [Fact]
         public void CheckReadCountAlEJ()
         {
@@ -184,6 +177,113 @@ namespace TestProject1
             // Assert
             Assert.True(thread.Count > 0, "no messages found.");
             Assert.True(expectedCount == thread.Count, "The number of messages between Al and Joe are not as expected: " + expectedCount + ". Found: " +thread.Count);
+        }
+        /// <summary>
+        /// Search for something that doesn't exist (will fix name later- drawing a blank rn)
+        /// </summary>
+        [Fact]
+        public void JimSearchNoResult() //UnicornHunt()
+        {
+            //Arrange
+            string body = "Unicorns";
+            string user = "Jim";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user,body);
+            //Assert
+            Assert.Null(list);
+        }
+        /// <summary>
+        /// Search for a body that belongs to a different user
+        /// </summary>
+        [Fact]
+        public void SearchForOtherUserMessageBody() //SteveTheBodySnatcher()
+        {
+            //Arrange
+            string body = "Latest Test";
+            string user = "Steve";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user, body);
+            //Assert
+            Assert.Null(list);
+        }
+        /// <summary>
+        /// Search for something no body, and checks to see if a string that is "" is technically found in all messages or none
+        /// </summary>
+        [Fact]
+        public void SearchEmptyBody() //ParanormalInvestigator()
+        {
+            //Arrange
+            string body = "";
+            string body2 = null;
+            //I was wondering if "" == null
+            string user = "Steve";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user, body);
+            var list2 = localService.SearchAll(user, body2);
+
+            //Assert
+            //Assert that Steve does not have any messages with no body
+            Assert.Null(list);
+            Assert.Null(list2);
+        }
+        /// <summary>
+        /// Checks search functionality on special characters- hunts for special characters
+        /// </summary>
+        [Fact]
+        public void JimSteveSpecialCharacterSearch()//ElmerFudd()
+        {
+            //Arrange
+            string body = "$@%& you!";
+            string user = "Jim";
+            string other = "Steve";
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, body);
+            //Assert
+            Assert.NotNull(list);
+        }
+        /// <summary>
+        /// Checks search functionality for a space instead of a character- searches for space with no character
+        /// </summary>
+        [Fact]
+        public void EmptySpaceSearchJim()//MorallyBankruptAstronautWhosReallyShittyAtHisJob()
+        {
+            //Arrange
+            string search = " ";
+            string body = "Tell me where it is or this puppy is gonna get it";
+            string user = "Jim";
+            string other = "Al";
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, search);
+            //Assert
+            Assert.NotNull(list);
+            Assert.True(list.Count > 1);
+        }
+        /// <summary>
+        /// Checks search functionality for a space instead of a character- searches for space with character
+        /// </summary>
+        [Fact]
+        public void CharacterSpaceSearchJim()//IneptAstronautWhosReallyJustTryingHisBest()
+        {
+            //Arrange
+            string search = "se, co";
+            string body = "Please, could you help me? I got lost, and I was supposed to be in orbit 15 minutes ago...";
+            string user = "Jim";
+            string other = "Al";
+            int expected = 1;
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, search);
+            //Assert
+            Assert.NotNull(list);
+            Assert.Equal(expected, list.Count);
         }
 
     }
