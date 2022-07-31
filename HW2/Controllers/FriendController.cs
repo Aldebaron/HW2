@@ -51,14 +51,25 @@ namespace HW2.Controllers
             return profilemsg;
         }
 
+        /// <summary>
+        /// How to update bio info.
+        /// </summary>
+        /// <param name="user">User that's changing their bio</param>
+        /// <param name="bio">New bio</param>
         [HttpPut("UpdateBio")]
-        public ActionResult UpdateBio(string user, string bio, string check)
+        public ActionResult UpdateBio(string user, string bio)
         {
             if (Authenticate(user) == false) { return NoContent(); }
             var newbio = _frndService.UpdateBio(user, bio);
             return Accepted(newbio);
         }
 
+
+        /// <summary>
+        /// How to add inventory info.
+        /// </summary>
+        /// <param name="user">User that's changing their inventory</param>
+        /// <param name="produce">New inventory item</param>
         [HttpPut("UpdateInventory")]
         public ActionResult UpdateInventory(string user, string produce)
         {

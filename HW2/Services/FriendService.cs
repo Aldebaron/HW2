@@ -63,10 +63,7 @@ namespace HW2.Services
             if (dt == new DateTime()) dt = DateTime.UtcNow;
             var test = new DateTime(); // See what the value is.
             if (password != password2) { return "Your reentered password does not match"; }
-            for (int i = 0; i < Profiles.Count - 1; i++)
-            {
-                if (Profiles[i].Username == username) { return "Please select a different username, that one is already in use."; }
-            }
+            if (FindUser(username) != 0) { return "Please select a different username, that one is already in use."; }
             if (forager == false && farmer == false) { return "You must be either a forager or a farmer. Otherwise, what are you doing here?"; }
 
             //Should we check validity of email address?
@@ -79,13 +76,20 @@ namespace HW2.Services
 
         }
 
-        public string UpdateInventory(string username, string produce)
-        {
-            int j = 0;
+        public int FindUser(string user) {
+            
             for (int i = 0; i < Profiles.Count - 1; i++)
             {
-                if (Profiles[i].Username == username) { j = i; break; }
+                if (Profiles[i].Username == user) { return i; break; }
             }
+            return 0;
+        }
+
+        //Allows a user to update theis inventory
+        public string UpdateInventory(string username, string produce)
+        {
+            int j = FindUser(username);
+            if (j == 0) { return "User not found"; }
 
             if (Profiles[j].Farmer == false) { return "You must be a farmer to have an inventory!"; }
             Profiles[j].Inventory.Add(produce);
@@ -94,17 +98,16 @@ namespace HW2.Services
 
         }
 
+        //Allows a user to update their bio
         public string UpdateBio(string user, string bio) {
 
-            for (int i= 0; i < Profiles.Count - 1; i++)
-            {
-                if (Profiles[i].Username == user) { Profiles[i].Bio = bio; return "Updated"; }
-            }
-
-            return "Failed";
+            int i = FindUser(user);
+            if (i != 0) { Profiles[i].Bio = bio; return "Updated"; }
+            return "User not found"; //The Authenticate function should prevent this from ever happening
 
         }
 
+        //Checks if a user has already friended someone
         public bool CheckFriendship(string user, string other)
         {
             bool fstatus = false;
@@ -155,9 +158,9 @@ namespace HW2.Services
             //organizes friendships by most recent
 
             return friendships;
-
-
         }
+
+        //Removes a friendship
         public string Unfriend(string user, string other)
         {
             for (int i = 0; i < Friends.Count - 1; i++)
