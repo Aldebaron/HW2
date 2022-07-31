@@ -76,6 +76,13 @@ namespace HW2.Services
 
         }
 
+        public Profile ViewProfile(string username) {
+            int i = FindUser(username);
+            var profile = Profiles[i];
+            return profile;
+
+        }
+
         public int FindUser(string user) {
             
             for (int i = 0; i < Profiles.Count - 1; i++)

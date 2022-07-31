@@ -84,6 +84,19 @@ namespace HW2.Controllers
         /// <param name="user">User ID who would have done the friending</param>
         /// <param name="other">User ID who would have been friended</param>
         /// <returns>Message about friendship</returns>
+        [HttpGet("Profile/{user}")]
+        public ActionResult<Profile> ViewProfile(string user)
+        {
+            var profile = _frndService.ViewProfile(user);
+            return profile;
+        }
+
+        /// <summary>
+        /// Check to see if a user has already established a friendship with another user.
+        /// </summary>
+        /// <param name="user">User ID who would have done the friending</param>
+        /// <param name="other">User ID who would have been friended</param>
+        /// <returns>Message about friendship</returns>
         [HttpGet("Friendship/{user}/{other}")]
         public ActionResult<string> CheckFriendship(string user, string other)
         {
