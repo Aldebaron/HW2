@@ -7,22 +7,33 @@ namespace HW2.Services
     public class FriendService
     {
         public static int FriendshipId = 998;
-        private static List<Friendship> Friends = new List<Friendship>(); // Database of all messages
+        public static int ProfileId = 998;
+        private static List<Friendship> Friends = new List<Friendship>();
+        private static List<Profile> Profiles = new List<Profile>();
 
         public FriendService()
         {
 
             Friends = new List<Friendship> { };
+            Profiles = new List<Profile> { };
 
-            
-        Befriend("EJ", "Al", new DateTime(2023, 5, 1, 8, 30, 52));
-        Befriend("EJ", "Cat", new DateTime(2020, 5, 1, 8, 30, 52));
-        Befriend("Cat", "Al", new DateTime(2019, 5, 1, 8, 30, 52));
-        Befriend("Jim", "Al", DateTime.UtcNow);
-        Befriend("John", "Joe", DateTime.UtcNow);
-           
+
+            Befriend("EJ", "Al", new DateTime(2023, 5, 1, 8, 30, 52));
+            Befriend("EJ", "Cat", new DateTime(2020, 5, 1, 8, 30, 52));
+            Befriend("Cat", "Al", new DateTime(2019, 5, 1, 8, 30, 52));
+            Befriend("Jim", "Al", DateTime.UtcNow);
+            Befriend("John", "Joe", DateTime.UtcNow);
+
+            NewProfile("Al", "1", "1", "al@aol.com", null, DateTime.UtcNow, true, false);
+            NewProfile("Joe", "2", "2", "joe@aol.com", null, DateTime.UtcNow, true, true);
+            NewProfile("John", "3", "3", "john@aol.com", null, DateTime.UtcNow, true, false);
+            NewProfile("Jim", "4", "4", "jim@aol.com", null, DateTime.UtcNow, false, true);
+            NewProfile("EJ", "5", "5", "ej@aol.com", null, DateTime.UtcNow, true, true);
+
         }
-        public List<Friendship> GetAll() => Friends;
+        public List<Friendship> GetAllFriendships() => Friends;
+
+        public List<Profile> GetAllProfiles() => Profiles;
 
         //My understanding of what you mean by "friending" someone is closer to "following" them in that if Person A follows Person B, it's not automatically
         //reciprocal, and Person B must then follow Person A. The alternative would be that A sends B a friend request, and once it's approved they're mutually friends.
@@ -46,8 +57,53 @@ namespace HW2.Services
             return friend.ToString();
             
         }
-        public List<Friendship> ListFriends()=> Friends;
-       
+
+        public string NewProfile(string username, string password, string password2, string email, string? bio, DateTime dt, bool forager, bool farmer)
+        {
+            if (dt == new DateTime()) dt = DateTime.UtcNow;
+            var test = new DateTime(); // See what the value is.
+            if (password != password2) { return "Your reentered password does not match"; }
+            for (int i = 0; i < Profiles.Count - 1; i++)
+            {
+                if (Profiles[i].Username == username) { return "Please select a different username, that one is already in use."; }
+            }
+            if (forager == false && farmer == false) { return "You must be either a forager or a farmer. Otherwise, what are you doing here?"; }
+
+            //Should we check validity of email address?
+
+            var profile = new Profile(username, password, email, bio, dt, forager, farmer);
+            ProfileId += 2;
+            profile.Id = ProfileId;
+            Profiles.Add(profile);
+            return profile.ToString();
+
+        }
+
+        public string UpdateInventory(string username, string produce)
+        {
+            int j = 0;
+            for (int i = 0; i < Profiles.Count - 1; i++)
+            {
+                if (Profiles[i].Username == username) { j = i; break; }
+            }
+
+            if (Profiles[j].Farmer == false) { return "You must be a farmer to have an inventory!"; }
+            Profiles[j].Inventory.Add(produce);
+            //I assume that the end goal is for produce in the inventory to be more than just string, but I don't know what it will be in the long run so I'm using string as a placeholder.
+            return "Updated";
+
+        }
+
+        public string UpdateBio(string user, string bio) {
+
+            for (int i= 0; i < Profiles.Count - 1; i++)
+            {
+                if (Profiles[i].Username == user) { Profiles[i].Bio = bio; return "Updated"; }
+            }
+
+            return "Failed";
+
+        }
 
         public bool CheckFriendship(string user, string other)
         {

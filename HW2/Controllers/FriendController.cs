@@ -20,7 +20,7 @@ namespace HW2.Controllers
        
         [HttpGet]
         public ActionResult<List<Friendship>> GetAll() =>
-            _frndService.ListFriends();
+            _frndService.GetAllFriendships();
 
 
         /// <summary>
@@ -35,6 +35,36 @@ namespace HW2.Controllers
             if (Authenticate(user) == false) { return NoContent(); }
             var friend = _frndService.Befriend(user, other, DateTime.UtcNow);
             return Accepted(friend);
+        }
+
+
+        /// <summary>
+        /// How to 'add' a profile.
+        /// </summary>
+        /// <param name="user">User ID doing the friending</param>
+        /// <param name="other">User ID being friended</param>
+        [HttpPost("NewProfile")]
+        public string NewProfile(string username, string password, string reenteredpassword, string email, string? bio, bool forager, bool farmer)
+        {
+            
+            var profilemsg = _frndService.NewProfile(username, password, reenteredpassword, email, bio, DateTime.UtcNow, forager, farmer);
+            return profilemsg;
+        }
+
+        [HttpPut("UpdateBio")]
+        public ActionResult UpdateBio(string user, string bio, string check)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var newbio = _frndService.UpdateBio(user, bio);
+            return Accepted(newbio);
+        }
+
+        [HttpPut("UpdateInventory")]
+        public ActionResult UpdateInventory(string user, string produce)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var newproduce = _frndService.UpdateBio(user, produce);
+            return Accepted(newproduce);
         }
 
         /// <summary>
@@ -71,24 +101,16 @@ namespace HW2.Controllers
 
         /// <summary>
         /// This function should be called as a way to authenticate a user is who they say.
-        /// For example, any one can call the endpoint SendMessage(). If a nefarious user
-        ///  tries to impersonate another user, this function should catch it. 
-        ///  We want to utilize this function in any area where a message is created or read,
-        ///  to ensure the proper person is accessing the message.
-        /// For example 2, if 'Joe' is sending a message, be sure he cannot send a message
-        ///  as someone else 'Jim' to a user 'Sue'. This example it doesn't really matter who 
-        ///  the 'to' is, but it's extremely important that the 'From' is validated.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
         private bool Authenticate(string userId)
         {
-            // Will check login information to see if this user is who they say.
-            // For now authentication details are masked. We will assume good actors.
-            // Terminology 'good actor' or 'bad actor' is a generic way to reference nefarious situations.
-            if (1 == 0)
+           if (1 == 0)
                 return false; // for debugging
             return true;
         }
+
+        //I wanted to use the profile info to make a simple Authenticate function, but it would require every controller function to include a "password" paramenter.
     }
 }
