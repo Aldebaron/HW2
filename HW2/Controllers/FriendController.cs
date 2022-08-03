@@ -148,10 +148,11 @@ namespace HW2.Controllers
         }
 
         /// <summary>
-        /// Lists all of a user's friends. Should anyone be able to see who someone has friended?
+        /// Display slection of user's records
         /// </summary>
-        /// <param name="user">User ID who would have done the friending</param>
-        /// <returns>list of friends</returns>
+        /// <param name="user">User who created the records</param>
+        /// <param name="number">Desired quantity of records</param>
+        /// <returns>list of records</returns>
         [HttpGet("DisplayRecords/{user}")]
         public ActionResult<List<Record>> DisplayRecords(string user, int number)
         {
