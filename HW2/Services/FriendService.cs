@@ -10,13 +10,14 @@ namespace HW2.Services
         public static int ProfileId = 998;
         private static List<Friendship> Friends = new List<Friendship>();
         private static List<Profile> Profiles = new List<Profile>();
+        private static List<Record> Records = new List<Record>();
 
         public FriendService()
         {
 
             Friends = new List<Friendship> { };
             Profiles = new List<Profile> { };
-
+            Records = new List<Record> { };
 
             Befriend("EJ", "Al", new DateTime(2023, 5, 1, 8, 30, 52));
             Befriend("EJ", "Cat", new DateTime(2020, 5, 1, 8, 30, 52));
@@ -30,10 +31,29 @@ namespace HW2.Services
             NewProfile("Jim", "4", "4", "jim@aol.com", null, DateTime.UtcNow, false, true);
             NewProfile("EJ", "5", "5", "ej@aol.com", null, DateTime.UtcNow, true, true);
 
+            NewRecord("John", "Tomatoes", 3, new DateTime(2022, 2, 3));
+            NewRecord("John", "Cilantro", 3, new DateTime(2022, 2, 2));
+            NewRecord("John", "Eggs", 3, new DateTime(2022, 2, 1));
+            NewRecord("John", "Oranges", 3, new DateTime(2022, 1, 30));
+            NewRecord("John", "Potatoes", 3, new DateTime(2022, 1, 2));
+            NewRecord("John", "Milk", 3, new DateTime(2022, 1, 2));
+            NewRecord("John", "Manure", 3, new DateTime(2022, 1, 1));
+            NewRecord("Steve", "Seedlings", 3, new DateTime(2022, 2, 3));
+            NewRecord("Steve", "Rutabagas", 3, new DateTime(2022, 2, 1));
+            NewRecord("Steve", "Jicama", 3, new DateTime(2022, 1, 30));
+            NewRecord("Steve", "Zucchini", 3, new DateTime(2022, 1, 10));
+            NewRecord("Steve", "Chilis", 3, new DateTime(2022, 1, 9));
+            NewRecord("Steve", "Squash", 3, new DateTime(2022, 1, 8));
+            NewRecord("Steve", "Apples", 3, new DateTime(2022, 1, 2));
+            NewRecord("Steve", "Pears", 3, new DateTime(2022, 1, 2));
+            NewRecord("Steve", "Strawberries", 3, new DateTime(2022, 1, 1));
+
         }
         public List<Friendship> GetAllFriendships() => Friends;
 
         public List<Profile> GetAllProfiles() => Profiles;
+
+        public List<Record> GetAllRecords() => Records;
 
         //My understanding of what you mean by "friending" someone is closer to "following" them in that if Person A follows Person B, it's not automatically
         //reciprocal, and Person B must then follow Person A. The alternative would be that A sends B a friend request, and once it's approved they're mutually friends.
@@ -43,7 +63,6 @@ namespace HW2.Services
         public string Befriend(string user, string other, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
-            var test = new DateTime(); // See what the value is. 
 
 
             bool fstatus = CheckFriendship(user, other);
@@ -61,9 +80,8 @@ namespace HW2.Services
         public string NewProfile(string username, string password, string password2, string email, string? bio, DateTime dt, bool forager, bool farmer)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
-            var test = new DateTime(); // See what the value is.
             if (password != password2) { return "Your reentered password does not match"; }
-            if (FindUser(username) != 0) { return "Please select a different username, that one is already in use."; }
+            if (FindUser(username) != -1) { return "Please select a different username, that one is already in use."; }
             if (forager == false && farmer == false) { return "You must be either a forager or a farmer. Otherwise, what are you doing here?"; }
 
             //Should we check validity of email address?
@@ -82,21 +100,21 @@ namespace HW2.Services
             return profile;
 
         }
-
+        //provides the index of a user's profile within Profiles, return -1 if not found
         public int FindUser(string user) {
             
-            for (int i = 0; i < Profiles.Count - 1; i++)
+            for (int i = 0; i < Profiles.Count; i++)
             {
-                if (Profiles[i].Username == user) { return i; break; }
+                if (Profiles[i].Username == user) { return i; }
             }
-            return 0;
+            return -1;
         }
 
         //Allows a user to update theis inventory
         public string UpdateInventory(string username, string produce)
         {
             int j = FindUser(username);
-            if (j == 0) { return "User not found"; }
+            if (j == -1) { return "User not found"; }
 
             if (Profiles[j].Farmer == false) { return "You must be a farmer to have an inventory!"; }
             Profiles[j].Inventory.Add(produce);
@@ -109,7 +127,7 @@ namespace HW2.Services
         public string UpdateBio(string user, string bio) {
 
             int i = FindUser(user);
-            if (i != 0) { Profiles[i].Bio = bio; return "Updated"; }
+            if (i != -1) { Profiles[i].Bio = bio; return "Updated"; }
             return "User not found"; //The Authenticate function should prevent this from ever happening
 
         }
@@ -118,7 +136,7 @@ namespace HW2.Services
         public bool CheckFriendship(string user, string other)
         {
             bool fstatus = false;
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if ((Friends[i].User == user || Friends[i].User == other) && (Friends[i].Other == user || Friends[i].Other == other))
                 {
@@ -141,7 +159,7 @@ namespace HW2.Services
             var t = new Friendship();
             //temporary container to switch order of list around
 
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if (Friends[i].User == user) { friendships.Add(Friends[i]); }
 
@@ -167,10 +185,10 @@ namespace HW2.Services
             return friendships;
         }
 
-        //Removes a friendship
+        //Remove a friendship
         public string Unfriend(string user, string other)
         {
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if (Friends[i].User == user && Friends[i].Other == other)
                 {
@@ -181,6 +199,70 @@ namespace HW2.Services
             }
 
             return "No friendship found";
+        }
+
+        //create a new record
+        public Record NewRecord(string user, string item, int quantity, DateTime dt) {
+
+            if (dt == new DateTime()) dt = DateTime.UtcNow;
+            var record = new Record(user, item, quantity, dt);
+
+            Records.Add(record);
+            return record;
+        }
+
+        //get all of a user's record
+        public List<Record> GetRecords(string user)
+        {
+            var r = new List<Record> { };
+
+            for (int i = 0; i < Records.Count; i++)
+            {
+                if (Records[i].User == user) { r.Add(Records[i]); }
+            }
+
+
+            return r;
+        }
+
+
+        //Display a portion of a user's records depending on the number indicated and the length of time between each record
+        public List<Record> DisplayRecords(string user, int number) {
+            var r = new List<Record> { };
+            var allr = GetRecords(user);
+            Record t;
+
+            //organize all of a user's records by date
+            for (int i = 0; i < allr.Count; i++)
+            {
+                if (allr[i].CreatedAt < allr[i + 1].CreatedAt)
+                {
+                    t = allr[i];
+                    allr[i] = allr[i + 1];
+                    allr[i + 1] = t;
+                    if (i > 0) { i -= 2; };
+                }
+            }
+
+            //return all of a user's record if the total is less that twice the number of record requested
+            if (allr.Count < (number * 2)) { return allr; }
+
+            //collect the number of records requested
+            for (int i = 0; i < number; i++)
+            {
+                r.Add(allr[i]);
+            }
+
+            //collect extra records if they were created within less than three days of the last record collected in the above loop
+            for (int i = number - 1; i < allr.Count - 1; i++)
+            {
+                if (allr[i + 1].CreatedAt < allr[i].CreatedAt.AddDays(3))
+                { r.Add(allr[i + 1]); }
+                else { break; }
+            }
+
+
+            return r;
         }
 
     }

@@ -19,8 +19,16 @@ namespace HW2.Controllers
 
        
         [HttpGet]
-        public ActionResult<List<Friendship>> GetAll() =>
+        public ActionResult<List<Friendship>> GetAllFriendships() =>
             _frndService.GetAllFriendships();
+
+        [HttpGet]
+        public ActionResult<List<Record>> GetAllRecords() =>
+            _frndService.GetAllRecords();
+
+        [HttpGet]
+        public ActionResult<List<Profile>> GetAllProfiles() =>
+            _frndService.GetAllProfiles();
 
 
         /// <summary>
@@ -120,6 +128,36 @@ namespace HW2.Controllers
             if (Authenticate(user) == false) { return NoContent(); }
             var list = new List<Friendship>();
             list = _frndService.AllFriends(user);
+            return list;
+        }
+
+        /// <summary>
+        /// How to 'add' a record.
+        /// This should be a HTTP POST method.
+        /// </summary>
+        /// <param name="user">Username of the person submitting the record</param>
+        /// <param name="item">Produce/item being taken</param>
+        /// <param name="quantity">Number of items taken</param>
+        /// <param name="dt">DateTime of the item getting taken- should be able to be set by user</param>
+        [HttpPost("NewRecord")]
+        public ActionResult NewRecord(string user, string item, int quantity, DateTime dt)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var record = _frndService.NewRecord(user, item, quantity, dt);
+            return Accepted(record);
+        }
+
+        /// <summary>
+        /// Lists all of a user's friends. Should anyone be able to see who someone has friended?
+        /// </summary>
+        /// <param name="user">User ID who would have done the friending</param>
+        /// <returns>list of friends</returns>
+        [HttpGet("DisplayRecords/{user}")]
+        public ActionResult<List<Record>> DisplayRecords(string user, int number)
+        {
+            if (Authenticate(user) == false) { return NoContent(); }
+            var list = new List<Record>();
+            list = _frndService.DisplayRecords(user, number);
             return list;
         }
 
