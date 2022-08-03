@@ -52,7 +52,7 @@ namespace HW2.Services
         public bool CheckFriendship(string user, string other)
         {
             bool fstatus = false;
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if ((Friends[i].User == user || Friends[i].User == other) && (Friends[i].Other == user || Friends[i].Other == other))
                 {
@@ -75,7 +75,7 @@ namespace HW2.Services
             var t = new Friendship();
             //temporary container to switch order of list around
 
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if (Friends[i].User == user) { friendships.Add(Friends[i]); }
 
@@ -104,7 +104,7 @@ namespace HW2.Services
         }
         public string Unfriend(string user, string other)
         {
-            for (int i = 0; i < Friends.Count - 1; i++)
+            for (int i = 0; i < Friends.Count; i++)
             {
                 if (Friends[i].User == user && Friends[i].Other == other)
                 {
