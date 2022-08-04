@@ -144,11 +144,11 @@ namespace HW2.Services
             return SearchThread;
         }
 
-        public List<Message> Inbox(string user) {
+        public List<Message> AllUsersMessages(string user) {
+
             
-            var inbox = new List<Message>();
             var ConvoThread = new List<Message>();
-            var Corresponders = new List<string>();
+           
 
             var t = new Message();
             //temporary container to switch order of list around
@@ -177,6 +177,15 @@ namespace HW2.Services
             }
             //organize user's messages by date
 
+
+            return ConvoThread;
+        }
+
+        public List<Message> Inbox(string user) {
+
+            var ConvoThread = AllUsersMessages(user);
+            var inbox = new List<Message>();
+            var Corresponders = new List<string>();
             string j;
             //placeholder for corresponder
             for (int i = (ConvoThread.Count - 1); i >= 0; i--)
@@ -195,43 +204,9 @@ namespace HW2.Services
         }
 
         public List<Message> SearchAll(string user, string search)
-        {
-            //In order to use a call to Inbox for this instead, I'd need to make it so that inbox returns ConvoThread, not just inbox, because SearchAll
-            //searches all of a user's messages, not just the most recent from each person. I could add a "decider" type thing like I did in alt for that, but
-            //would that be the best way of doing that?
-
-            var inbox = new List<Message>();
-            var ConvoThread = new List<Message>();
-            var Corresponders = new List<string>();
+        {   
             var SearchThread = new List<Message>();
-
-            var t = new Message();
-            //temporary container to switch order of list around
-
-
-            //new inbox Average = 550 milliseconds - difference = 73
-            for (int i = 0; i < Messages.Count; i++)
-            {
-                if (Messages[i].To == user || Messages[i].From == user)
-                { ConvoThread.Add(Messages[i]); }
-
-            }
-            //Collect all messages sent/received by user
-
-            for (int i = 0; i < (ConvoThread.Count - 1); i++)
-            {
-
-                if (ConvoThread[i].CreatedAt > ConvoThread[i + 1].CreatedAt)
-                {
-                    t = ConvoThread[i];
-                    ConvoThread[i] = ConvoThread[i + 1];
-                    ConvoThread[i + 1] = t;
-                    if (i > 0) { i -= 2; };
-                }
-
-
-            }
-            //organize user's messages by date
+            var ConvoThread = AllUsersMessages(user);
 
             for (int i = (ConvoThread.Count - 1); i >= 0; i--) {
                 if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
