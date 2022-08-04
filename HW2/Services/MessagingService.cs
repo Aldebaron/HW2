@@ -229,6 +229,7 @@ namespace HW2.Services
                     if (i > 0) { i -= 2; };
                 }
 
+
             }
             //organize user's messages by date
 
