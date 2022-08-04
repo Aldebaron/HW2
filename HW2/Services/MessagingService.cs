@@ -133,10 +133,9 @@ namespace HW2.Services
             //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
             //and I think that has more practical merit, but I could also expand it if that's preferred.
             // Good idea! Small details like this may not always be apparent at the initil development. Let's see how it goes. (JVP-Jul-2022)
-            var ConvoThread = new List<Message> { };
-            var SearchThread = new List<Message> { };
+            var ConvoThread = ReadMessage(user, other);
+            var SearchThread = new List<Message>();
 
-            ConvoThread = ReadMessage(user, other);
             for (int i = 0; i < (ConvoThread.Count - 1); i++)
             {
                 if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); };
