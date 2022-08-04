@@ -55,11 +55,6 @@ namespace HW2.Services
 
         public List<Record> GetAllRecords() => Records;
 
-        //My understanding of what you mean by "friending" someone is closer to "following" them in that if Person A follows Person B, it's not automatically
-        //reciprocal, and Person B must then follow Person A. The alternative would be that A sends B a friend request, and once it's approved they're mutually friends.
-        //If we went with the second version, it would also make sense to limit Messages so that they can only be sent to friends. However, this may not be super practical
-        //for foragers wanting to ask farmers quick questions, etc.
-
         public string Befriend(string user, string other, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
