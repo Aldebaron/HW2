@@ -75,8 +75,6 @@ namespace HW2.Services
 
 
         public List<Message> ReadMessage(string user, string other) {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var ConvoThread = new List<Message> { };
 
             if (user == other)
@@ -89,12 +87,9 @@ namespace HW2.Services
                         ConvoThread.Add(Messages[i]);
                     }
                     i--;
-
                 }
-
             }
             //Fail fast! Special case (messages sent to self) handled before usual situation
-
 
             else
             {
@@ -126,23 +121,35 @@ namespace HW2.Services
 
                 }
 
-            stopwatch.Stop();
-            var stopwatchresult = String.Format("That took {0} milliseconds!", stopwatch.ElapsedMilliseconds);
-            Console.WriteLine(stopwatchresult);
+           
             return ConvoThread;
         }
 
 
-        public List<Message> Inbox(string user) {
-            
-            var inbox = new List<Message>();
-            var ConvoThread = new List<Message>();
-            var Corresponders = new List<string>();
+        public List<Message> SearchConvo(string user, string other, string search)
+        {
+            //if message in convothread has search term in body, add to searchthread.
+            //limitation- if you searched for someone's name within a convothread of that person, you might expect it to return
+            //all messages sent by that person. This code won't do that, it will only return messages with that person's name in the body,
+            //and I think that has more practical merit, but I could also expand it if that's preferred.
+            // Good idea! Small details like this may not always be apparent at the initil development. Let's see how it goes. (JVP-Jul-2022)
+            var ConvoThread = ReadMessage(user, other);
+            var SearchThread = new List<Message>();
 
+            for (int i = 0; i < (ConvoThread.Count - 1); i++)
+            {
+                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); };
+            }
+
+            return SearchThread;
+        }
+
+        private List<Message> AllUsersMessages(string user) {
+
+            var ConvoThread = new List<Message>();
+           
             var t = new Message();
             //temporary container to switch order of list around
-
-            
 
 
             //new inbox Average = 550 milliseconds - difference = 73
@@ -168,6 +175,15 @@ namespace HW2.Services
             }
             //organize user's messages by date
 
+
+            return ConvoThread;
+        }
+
+        public List<Message> Inbox(string user) {
+
+            var ConvoThread = AllUsersMessages(user);
+            var inbox = new List<Message>();
+            var Corresponders = new List<string>();
             string j;
             //placeholder for corresponder
             for (int i = (ConvoThread.Count - 1); i >= 0; i--)
@@ -180,10 +196,27 @@ namespace HW2.Services
             //added to the list
 
             
-                return inbox;
-
-
+            return inbox;
         }
+
+        public List<Message> SearchAll(string user, string search)
+        {   
+            var SearchThread = new List<Message>();
+            var ConvoThread = AllUsersMessages(user);
+
+            for (int i = (ConvoThread.Count - 1); i >= 0; i--) {
+                if (ConvoThread[i].Body.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                else if (ConvoThread[i].To.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+                else if (ConvoThread[i].From.Contains(search)) { SearchThread.Add(ConvoThread[i]); }
+
+            }
+            //if message in convothread contains search term, add it to searchthread.
+            //I believe that some messaging service search things repeat messages if they contain multiple instances of the
+            //search term. However, I think that's stupid. Unless you want me to do that, in which case it's not stupid.
+
+            return SearchThread;
+        }
+
 
     }
 
