@@ -12,8 +12,9 @@ namespace TestProject1
         {
             MsgService = new MessagingService();
         }
-
-        //Tests that Id is at least even, like it's supposed to be
+        /// <summary>
+        ///Tests that Id is at least even, like it's supposed to be
+        /// <summary>
         [Fact]
         public void CheckAdd()
         {
@@ -29,8 +30,9 @@ namespace TestProject1
             //Assert that Id is even
             Assert.Equal(0, i); 
         }
-
-        //Checks for expected count of messages and for a message with specified body.
+        /// <summary>
+        ///Checks for expected count of messages and for a message with specified body.
+        /// <summary>
         [Fact]
         public void CheckMessages()
         {
@@ -42,23 +44,10 @@ namespace TestProject1
             localService.Add("Jim", "Steve", body, DateTime.UtcNow);
             localService.Add("Al", "Joe", "Random messages are oddly hard to write", DateTime.UtcNow);
             bool msgFound = false;
-            bool test = new bool(); // what is the default status of a bool if you don't specify?
-            //I wrote an assert statement for it but it won't accept an unnassigned variable even tho it's boolean
-            // Interesting, the new keyword seems to work, but setting = false is much easier.
-
+            
             //act
             var thread = localService.ReadMessage("Jim", "Steve");
             int m = thread.Count;
-
-            //WAIT- what if I added a function in MessagingServices that searches all of a users messages for
-            //ones containing a keyphrase? This wouldn't really solve the above problem, you'd still need to know
-            //at least one user involved, but it would add some cool functionality to the messaging service
-            // That's called big brother. Complete view. However this might be an admin function we add down the road for monitoring user's activity. 
-            // Still big brother, however if users become unruly, we might have to ban/block their account.
-            //No, sorry, I mean like how Messages on the iphone offers a search *your own* messages function. And when it's actually in use,
-            //bc you'd be searching your own messages, the user would always be known.
-            // That could work. We could also implemented search via client side code.
-            // Good idea, create an end point that contains
 
             for (int i =0; i < m; i++) {
                 if (thread[i].Body == body) { msgFound = true; }
@@ -67,13 +56,12 @@ namespace TestProject1
             //assert
             //Asserts that Jim/Steve thread contains expected number of messages
             //Asserts that there is a message with the specified body
-            Assert.Equal(expectedCount, m); // It wouldn't allow me to include a failure message? It got very angry and very confusing.
-            // Did the computer get angry? hehe, I guess the failure message isn't allowed. The default message is not too bad.
+            Assert.Equal(expectedCount, m);
             Assert.True(msgFound, "There is no message with the body " + body);
-            Assert.False(test, "The default status of an unspecified bool is true"); // ok, we can remove this code.
         }
-
-        //Checks to see if ReadMessage produces the right number of messages
+        /// <summary>
+        ///Checks to see if ReadMessage produces the right number of messages
+        /// <summary>
         [Fact]
         public void CheckReadCountAlEJ()
         {
@@ -92,6 +80,67 @@ namespace TestProject1
         // NOTE: YES!! You've found what I wanted you to see here. Continue to use the global variable.
         //So this one keeps the global variable and the ones that you put pickanewname in use a local?
         // Let's talk about this in August.
+
+        //Checks SearchConvo
+        [Fact]
+        public void CheckSearchConvoAlJoeGoodbye()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            int expectedCount = 1000; // expected number of messages
+
+            //act
+            var c = localService.SearchConvo("Joe", "Al", "Goodbye!");
+            var d = localService.SearchConvo("Al", "Joe", "Goodbye!");
+
+            //assert
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
+
+        /// <summary>
+        /// Searches for text that is not in the two parties conversation. 
+        /// </summary>
+        [Fact]
+        public void CheckSearchConvoAlJoeNotFound()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            int expectedCount = 0; // expected number of messages
+
+            //act
+            var c = localService.SearchConvo("Joe", "Al", "See ya");
+            var d = localService.SearchConvo("Al", "Joe", "See ya");
+
+            //assert
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
+
+        /// <summary>
+        /// Testing the SearchConvo() endpoint for one word in a body of a message.
+        /// </summary>
+        [Fact]
+        public void CheckSearchConvoAlJoeUniverse()
+        {
+            //arrange
+            var localService = MsgService;
+            //var localService = new MessagingService();
+            var body = "This is a test messages in a test universe. "; // expected count of messages
+            int expectedCount = 1; // expected number of messages
+
+            //act
+            var a = localService.Add("Joe", "Al", body, new DateTime());
+            var c = localService.SearchConvo("Joe", "Al", "universe");
+            var d = localService.SearchConvo("Al", "Joe", "universe");
+
+            //assert
+            Assert.Equal(body, a.Body);
+            Assert.Equal(expectedCount, c.Count);
+            Assert.Equal(c, d);
+        }
 
         /// <summary>
         /// Ensure that the messaging service has a specific number of messages in the database between Al and Joe
@@ -128,6 +177,113 @@ namespace TestProject1
             // Assert
             Assert.True(thread.Count > 0, "no messages found.");
             Assert.True(expectedCount == thread.Count, "The number of messages between Al and Joe are not as expected: " + expectedCount + ". Found: " +thread.Count);
+        }
+        /// <summary>
+        /// Search for something that doesn't exist (will fix name later- drawing a blank rn)
+        /// </summary>
+        [Fact]
+        public void JimSearchNoResult() //UnicornHunt()
+        {
+            //Arrange
+            string body = "Unicorns";
+            string user = "Jim";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user,body);
+            //Assert
+            Assert.Null(list);
+        }
+        /// <summary>
+        /// Search for a body that belongs to a different user
+        /// </summary>
+        [Fact]
+        public void SearchForOtherUserMessageBody() //SteveTheBodySnatcher()
+        {
+            //Arrange
+            string body = "Latest Test";
+            string user = "Steve";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user, body);
+            //Assert
+            Assert.Null(list);
+        }
+        /// <summary>
+        /// Search for something no body, and checks to see if a string that is "" is technically found in all messages or none
+        /// </summary>
+        [Fact]
+        public void SearchEmptyBody() //ParanormalInvestigator()
+        {
+            //Arrange
+            string body = "";
+            string body2 = null;
+            //I was wondering if "" == null
+            string user = "Steve";
+            var localService = new MessagingService();
+            //Act
+            var list = localService.SearchAll(user, body);
+            var list2 = localService.SearchAll(user, body2);
+
+            //Assert
+            //Assert that Steve does not have any messages with no body
+            Assert.Null(list);
+            Assert.Null(list2);
+        }
+        /// <summary>
+        /// Checks search functionality on special characters- hunts for special characters
+        /// </summary>
+        [Fact]
+        public void JimSteveSpecialCharacterSearch()//ElmerFudd()
+        {
+            //Arrange
+            string body = "$@%& you!";
+            string user = "Jim";
+            string other = "Steve";
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, body);
+            //Assert
+            Assert.NotNull(list);
+        }
+        /// <summary>
+        /// Checks search functionality for a space instead of a character- searches for space with no character
+        /// </summary>
+        [Fact]
+        public void EmptySpaceSearchJim()//MorallyBankruptAstronautWhosReallyShittyAtHisJob()
+        {
+            //Arrange
+            string search = " ";
+            string body = "Tell me where it is or this puppy is gonna get it";
+            string user = "Jim";
+            string other = "Al";
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, search);
+            //Assert
+            Assert.NotNull(list);
+            Assert.True(list.Count > 1);
+        }
+        /// <summary>
+        /// Checks search functionality for a space instead of a character- searches for space with character
+        /// </summary>
+        [Fact]
+        public void CharacterSpaceSearchJim()//IneptAstronautWhosReallyJustTryingHisBest()
+        {
+            //Arrange
+            string search = "se, co";
+            string body = "Please, could you help me? I got lost, and I was supposed to be in orbit 15 minutes ago...";
+            string user = "Jim";
+            string other = "Al";
+            int expected = 1;
+            var localService = new MessagingService();
+            //Act
+            localService.Add(user, other, body, DateTime.UtcNow);
+            var list = localService.SearchAll(user, search);
+            //Assert
+            Assert.NotNull(list);
+            Assert.Equal(expected, list.Count);
         }
 
     }
