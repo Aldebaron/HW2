@@ -144,12 +144,10 @@ namespace HW2.Services
             return SearchThread;
         }
 
-        public List<Message> AllUsersMessages(string user) {
+        private List<Message> AllUsersMessages(string user) {
 
-            
             var ConvoThread = new List<Message>();
            
-
             var t = new Message();
             //temporary container to switch order of list around
 
@@ -198,9 +196,7 @@ namespace HW2.Services
             //added to the list
 
             
-                return inbox;
-
-
+            return inbox;
         }
 
         public List<Message> SearchAll(string user, string search)
