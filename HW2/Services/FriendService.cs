@@ -55,6 +55,7 @@ namespace HW2.Services
 
         public List<Record> GetAllRecords() => Records;
 
+        //Add new friendship- this could actually maybe be integrated into the profile portion, because it's not a two-way thing
         public string Befriend(string user, string other, DateTime dt)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
@@ -72,6 +73,7 @@ namespace HW2.Services
             
         }
 
+        //Create a new profile
         public string NewProfile(string username, string password, string password2, string email, string? bio, DateTime dt, bool forager, bool farmer)
         {
             if (dt == new DateTime()) dt = DateTime.UtcNow;
@@ -89,6 +91,7 @@ namespace HW2.Services
 
         }
 
+        //View someone's profile- no authentication needed, just username of the person whose profile you want to view
         public Profile ViewProfile(string username) {
             int i = FindUser(username);
             var profile = Profiles[i];
@@ -105,7 +108,7 @@ namespace HW2.Services
             return -1;
         }
 
-        //Allows a user to update theis inventory
+        //Allows a farmer to update their inventory (unnecessary?)
         public string UpdateInventory(string username, string produce)
         {
             int j = FindUser(username);
@@ -145,7 +148,7 @@ namespace HW2.Services
             return fstatus;
         }
 
-
+        //Returns a list of all of the people a user has friended
         public List<Friendship> AllFriends(string user) {
             
             var friendships = new List<Friendship>();
@@ -239,9 +242,6 @@ namespace HW2.Services
                 }
             }
 
-            //return all of a user's record if the total is less that twice the number of record requested
-            if (allr.Count < (number * 2)) { return allr; }
-
             //collect the number of records requested
             for (int i = 0; i < number; i++)
             {
@@ -249,13 +249,13 @@ namespace HW2.Services
             }
 
             //collect extra records if they were created within less than three days of the last record collected in the above loop
-            for (int i = number - 1; i < allr.Count - 1; i++)
+            for (int i = number - 1; (i < allr.Count - 1 && i < number*1.5); i++)
             {
                 if (allr[i + 1].CreatedAt < allr[i].CreatedAt.AddDays(3))
                 { r.Add(allr[i + 1]); }
                 else { break; }
             }
-
+            
 
             return r;
         }
